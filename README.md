@@ -33,7 +33,7 @@ The web app is built using Python and Flask. It uses a PostgreSQL database, with
 - Routes have a name, difficulty/grade (font-grade), and type (boulder, sport, trad, DWS).
 - Each route also has a rating (stars: 0–3) calculated from user ratings, count of logged climbs, and public user comments.
 
-### Logbook and tick-List
+### Logbook and tick-list
 
 - Personal to users.
 - Logbook and tick-list consist of individual routes added by the user.
