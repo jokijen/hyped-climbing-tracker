@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Hyped</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <img src="static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo">
+    </header>
+    <div class="container">
+        <h1>Welcome to Hyped!</h1>
+        <h2>Log your sends and discover new projects</h2>
+        <form action="/index" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <input type="submit" value="Let's go">
+        </form>
+        <p>No account yet? You can create one <a href="/register">here</a>.</p>
+        <h3>So what's with all the Hype?</h3>
+        <p>Hyped is a climb logger that allows you to log your sends and share your views with the community. You can also discover new projects and keep your tick-list safe for future adventures.</p>
+        <p>All content can be accessed by members.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register to Hyped</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <img src="static/Hyped_logo_b265x155.png" alt="Hyped Logo" class="logo">
+    </header>
+    <div class="container">
+        <h2>With an account you can...</h2>
+        <ul>
+            <li>browse crag information (Finland)</li>
+            <li>browse route information (Finland)</li>
+            <li>save crags to favourites</li>
+            <li>keep a logbook of your climbs and add comments for the whole community to see</li>
+            <li>maintain a tick-list</li>
+        </ul>
+        <p>Fill in the following fields to register.</p>
+        <form action="/register" method="post">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password1">Password:</label>
+            <input type="password" id="password1" name="password1" required>
+            <label for="password2">Password again:</label>
+            <input type="password" id="password2" name="password2" required>
+            <input type="submit" value="Create account">
+        </form>
+    </div>
+</body>
+</html>

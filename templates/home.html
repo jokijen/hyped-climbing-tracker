@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <img src="static/Hyped_logo_b265x155.png" alt="Hyped Logo" class="logo">
+    </header>
+    <h1>Welcome to Hyped</h1>
+    <form method="get" action="/search">
+        <input type="text" name="query" placeholder="Search for crags or routes">
+        <button type="submit">Search</button>
+    </form>
+    <nav>
+        <ul>
+            <li><a href="/favourites">Favourites</a></li>
+            <li><a href="/tick-list">Tick-list</a></li>
+            <li><a href="/logged-sends">Logged sends</a></li>
+            <li><a href="/crags">Browse all crags</a></li>
+            <li><a href="/climbs">Browse all climbs</a></li>
+            <li><a href="/random">Get a random crag and climb</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+</body>
+</html>
