@@ -8,6 +8,10 @@ The web app is built using Python and Flask. It uses a PostgreSQL database, with
 
 ## Table of contents
 1. [Application functionality and features](#application-functionality-and-features)
+2. [Current state of the application]
+(#current-state-of-the-application)
+3. [Testing the application in production]
+(#testing-the-application-in-production)
 
 ## Application functionality and features
 
@@ -42,3 +46,25 @@ The web app is built using Python and Flask. It uses a PostgreSQL database, with
 
 - Personal to users.
 - Favourite crags consist of crags added to favourites by the user.
+
+
+## Current state of the application
+
+The development of the Hyped application is progressing with early versions of many key components either initiated or done:
+ 
+- Backend (Python, Flask): The routes.py file has been started. Additionally, there are various Python files including climbs.py, crags.py, and users.py to manage different aspects of the app.
+- Database: An initial schema.sql file has been created to define the database, but otherwise the database side of the development is in very early stages.
+- HTML: The login and registration pages are fairly complete. The home page visible after login has a structure in place.
+- Formatting: An initial style.css file has been created for formatting, and a logo has been designed in both black and white. The style of the website is not yet finalized, which is why there may be variation on different pages.
+ 
+Overall, the project has made fairly decent progress with some base elements in place or initiated. All feedback is very welcome. Development will continue on from here.
+
+
+## Testing the application in production
+
+You can test the application by taking the following steps: 
+1. Clone the repository
+2. Create a virtual environment with $ python3 venv venv
+3. Activate the virtual environment with $ source venv/bin/activate
+4. Install all the necessary packages using pip with $ pip install -r requirements.txt
+5. Start up PostgreSQL with $ start-pg.sh (you can use it in terminal with the command psql) - PostgreSQL was installed using a custom installation script that can be found here: https://github.com/hy-tsoha/local-pg
