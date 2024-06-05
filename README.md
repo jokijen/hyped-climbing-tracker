@@ -64,7 +64,9 @@ Overall, the project has made fairly decent progress with some base elements in 
 
 You can test the application by taking the following steps: 
 1. Clone the repository
-2. Create a virtual environment with $ python3 venv venv
+2. Create a virtual environment with $ python3 -m venv venv
 3. Activate the virtual environment with $ source venv/bin/activate
 4. Install all the necessary packages using pip with $ pip install -r requirements.txt
 5. Start up PostgreSQL with $ start-pg.sh (you can use it in terminal with the command psql) - PostgreSQL was installed using a custom installation script that can be found here: https://github.com/hy-tsoha/local-pg
+6. Set up the database schema with $ psql < schema.sql
+7. Start the application with $ flask run
