@@ -63,10 +63,11 @@ Overall, the project has made fairly decent progress with some base elements in 
 ## Testing the application in production
 
 You can test the application by taking the following steps: 
-1. Clone the repository
-2. Create a virtual environment with $ python3 -m venv venv
-3. Activate the virtual environment with $ source venv/bin/activate
-4. Install all the necessary packages using pip with $ pip install -r requirements.txt
-5. Start up PostgreSQL with $ start-pg.sh (you can use it in terminal with the command psql) - PostgreSQL was installed using a custom installation script that can be found here: https://github.com/hy-tsoha/local-pg
-6. Set up the database schema with $ psql < schema.sql
-7. Start the application with $ flask run
+1. Clone the repository and go to its root directory
+2. Create a directory .env and add "DATABASE_URL=" with path to database and "SECRET_KEY=" with a secret key
+3. Create a virtual environment with $ python3 -m venv venv
+4. Activate the virtual environment with $ source venv/bin/activate
+5. Install all the necessary packages using pip with $ pip install -r requirements.txt
+6. Start up PostgreSQL with $ start-pg.sh (you can use it in terminal with the command psql) - PostgreSQL was installed using a custom installation script that can be found here: https://github.com/hy-tsoha/local-pg
+7. Set up the database schema with $ psql < schema.sql
+8. Start the application with $ flask run
