@@ -10,21 +10,28 @@
     <header>
         <img src="static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo">
     </header>
-    <h1>Welcome to Hyped</h1>
-    <form method="get" action="/search">
-        <input type="text" name="query" placeholder="Search for crags or routes">
-        <button type="submit">Search</button>
-    </form>
-    <nav>
-        <ul>
-            <li><a href="/favourites">Favourites</a></li>
-            <li><a href="/tick-list">Tick-list</a></li>
-            <li><a href="/logged-sends">Logged sends</a></li>
-            <li><a href="/crags">Browse all crags</a></li>
-            <li><a href="/climbs">Browse all climbs</a></li>
-            <li><a href="/random">Get a random crag and climb</a></li>
-            <li><a href="/logout">Logout</a></li>
-        </ul>
-    </nav>
+    <div class="container">
+        <h1>Welcome to Hyped</h1>
+        <form method="get" action="/search">
+            <input type="text" name="query" placeholder="Search for crags or routes">
+            <button type="submit">Search</button>
+        </form>
+        <nav>
+            <ul>
+                <li><a href="/favourites">Favourites</a></li>
+                <li><a href="/tick-list">Tick-list</a></li>
+                <li><a href="/logged-sends">Logged sends</a></li>
+            </ul>
+            <ul>
+                <li><a href="/crags">Browse all crags</a></li>
+                <li><a href="/climbs">Browse all climbs</a></li>
+                <li><a href="/random">Get random crag and climb</a></li>
+            </ul>
+            <ul>
+                <li><a href="/profile">See your profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
 </body>
 </html>
