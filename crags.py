@@ -1,8 +1,10 @@
 from db import db
+from sqlalchemy import text
 
 
 def count_routes():
-    result = db.session.execute("SELECT COUNT(*) FROM routes r, crags c WHERE r.crag_id = c.id")
+    sql = "SELECT COUNT(*) FROM routes r, crags c WHERE r.crag_id = c.id"
+    result = db.session.execute(text(sql))
     counter = result.fetchone()[0]
     return counter
 

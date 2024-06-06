@@ -1,6 +1,5 @@
 from app import app
-import crags
-import users
+import climbs, crags, users
 from flask import redirect, render_template, request
 
 
@@ -27,18 +26,19 @@ def register():
     
     if request.method == "POST":
         username = request.form["username"]
+        email = request.form["email"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
 
         if password1 != password2:
             return render_template("error.html", message="The passwords do not match")
-        if users.register(username, password1):
+        if users.register(username, email, password1):
             return redirect("/")
         else:
             return render_template("error.html", message="Registration was unsuccessful. Please try a again.")
 
 
-@app.route("/home")
+@app.route("/home", methods=["GET", "POST"])
 def home():
     if request.method == "GET":
         return render_template("home.html")
@@ -48,6 +48,11 @@ def home():
 
 
 
-@app.route("/crags")
+@app.route("/crags", methods=["GET", "POST"])
 def crags():
+    pass
+
+
+@app.route("/profile", methods=["GET", "POST"])
+def profile():
     pass
