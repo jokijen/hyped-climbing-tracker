@@ -33,9 +33,9 @@ def register():
         if password1 != password2:
             return render_template("error.html", message="The passwords do not match")
         if users.register(username, email, password1):
-            return redirect("/")
+            return redirect("/home")
         else:
-            return render_template("error.html", message="Registration was unsuccessful. Please try a again.")
+            return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, other error.) Please try a again.")
 
 
 @app.route("/home", methods=["GET", "POST"])
@@ -44,9 +44,15 @@ def home():
         return render_template("home.html")
 
     if request.method == "POST":
+        if users.logout():
+            return redirect("/logout")
         pass
 
 
+@app.route("/logout", methods=["GET"])
+def logout():
+    if request.method == "GET":
+        return render_template("logout.html")
 
 @app.route("/crags", methods=["GET", "POST"])
 def crags():
