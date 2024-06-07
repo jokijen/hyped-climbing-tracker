@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/"><img src="static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>Climbs</h1> 
+        <p>Here is a list of all climbs listed on Hyped - boulder, sport, trad, you name it!</p>
+        <hr>
+        {% for climb in climbs_list %}
+        <h3> {{ climb.climb_name }} </h3>
+        Difficulty (font): <b>{{ climb.difficulty }}</b> <br>
+        Type: <b>{{ climb.climb_type }}</b> <br>
+        Description: <b>{{ climb.climb_description }}</b> <br>
+        Created by: <b>{{ climb.created_by }}</b> <br>
+        <a href="/climbs/{{ climb.id }}">Go to climb</a>
+        <hr> 
+        {% endfor %}
+    </div>
+</body>
+</html>

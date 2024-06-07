@@ -38,6 +38,12 @@ def register():
             return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, other error.) Please try a again.")
 
 
+@app.route("/logout", methods=["GET"])
+def logout():
+    if request.method == "GET":
+        return render_template("logout.html")
+    
+
 @app.route("/home", methods=["GET", "POST"])
 def home():
     if request.method == "GET":
@@ -49,14 +55,26 @@ def home():
         pass
 
 
-@app.route("/logout", methods=["GET"])
-def logout():
-    if request.method == "GET":
-        return render_template("logout.html")
+@app.route("/search", methods=["GET"])
+def search_page():
+    search_terms = request.args["query"]
+    all_crags = crags.get_all_crags()
+    all_climbs = climbs.get_all_climbs()
+    return render_template("search.html", search_terms=search_terms, crags_list=all_crags, climbs_list=all_climbs)
+
 
 @app.route("/crags", methods=["GET", "POST"])
-def crags():
-    pass
+def crags_page():
+    if request.method == "GET":
+        all_crags = crags.get_all_crags()
+        return render_template("crags.html", crags_list=all_crags)
+    
+
+@app.route("/climbs", methods=["GET", "POST"])
+def climbs_page():
+    if request.method == "GET":
+        all_climbs = climbs.get_all_climbs()
+        return render_template("climbs.html", climbs_list=all_climbs)
 
 
 @app.route("/profile", methods=["GET", "POST"])

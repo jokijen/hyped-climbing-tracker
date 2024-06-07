@@ -12,7 +12,7 @@ CREATE TABLE crags (
     latitude DECIMAL(8,6),
     longitude DECIMAL(9,6),
     crag_description TEXT,
-    created_by INTEGER REFERENCES users(id),
+    created_by TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE climbs (
@@ -22,7 +22,7 @@ CREATE TABLE climbs (
     climb_type TEXT,
     climb_description TEXT,
     crag_id INTEGER REFERENCES crags(id),
-    created_by INTEGER REFERENCES users(id),
+    created_by TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE user_climbed (
