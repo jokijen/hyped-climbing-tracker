@@ -1,9 +1,9 @@
 from app import app
 import climbs, crags, users
-from flask import redirect, render_template, request
+from flask import redirect, render_template, request, session
 
 
-@app.route("/index", methods=["GET", "POST"])
+@app.route("/index", methods=["GET", "POST"]) # landing/login page
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
@@ -38,33 +38,33 @@ def register():
             return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, other error.) Please try a again.")
 
 
-@app.route("/logout", methods=["GET"])
+@app.route("/logout")
 def logout():
-    if request.method == "GET":
-        return render_template("logout.html")
+    users.logout() # clears the session
+    return render_template("logout.html")
     
 
-@app.route("/home", methods=["GET", "POST"])
+@app.route("/home")
 def home():
-    if request.method == "GET":
-        return render_template("home.html")
-
-    if request.method == "POST":
-        if users.logout():
-            return redirect("/logout")
-        pass
+    if not users.user_id(): # if user is not logged in, take to login page
+        return redirect("/")
+    
+    return render_template("home.html")
 
 
 @app.route("/search", methods=["GET"])
 def search_page():
-    search_terms = request.args["query"]
-    all_crags = crags.get_all_crags()
-    all_climbs = climbs.get_all_climbs()
-    return render_template("search.html", search_terms=search_terms, crags_list=all_crags, climbs_list=all_climbs)
+    query = request.args["query"]
+    find_crags = crags.search_crags(query)
+    find_climbs = climbs.search_climbs(query)
+    return render_template("search.html", query=query, crags_list=find_crags, climbs_list=find_climbs)
 
 
 @app.route("/crags", methods=["GET", "POST"])
 def crags_page():
+    if not users.user_id():
+        return redirect("/")
+
     if request.method == "GET":
         all_crags = crags.get_all_crags()
         return render_template("crags.html", crags_list=all_crags)
@@ -72,6 +72,9 @@ def crags_page():
 
 @app.route("/climbs", methods=["GET", "POST"])
 def climbs_page():
+    if not users.user_id():
+        return redirect("/")
+
     if request.method == "GET":
         all_climbs = climbs.get_all_climbs()
         return render_template("climbs.html", climbs_list=all_climbs)
