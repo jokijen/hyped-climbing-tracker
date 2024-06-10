@@ -19,6 +19,10 @@ h1, h2, h3 {
     color: #333333;
 }
 
+h2 {
+    font-size: 1.25em;
+}
+
 p {
     margin-bottom: 1em;
 }
@@ -68,6 +72,10 @@ form input[type="submit"]:hover {
     margin: auto;
     overflow: hidden;
     padding: 20px;
+}
+
+.hidden {
+    display: none;
 }
 
 .logo {
