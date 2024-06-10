@@ -8,21 +8,29 @@ def get_all_crags():
     all_crags = result.fetchall()
     return all_crags
 
-"""
-def count_climbs():
-    sql = "SELECT COUNT(*) FROM routes r, crags c WHERE r.crag_id = c.id"
-    result = db.session.execute(text(sql))
-    counter = result.fetchone()[0]
-    return counter
-    """
 
-def add_crag(name, latitude, longitude, description, created_by):
+def get_crag(id):
+    sql = "SELECT * FROM crags WHERE id=:id"
+    result = db.session.execute(text(sql), {"id":id})
+    crag_info = result.fetchone()
+    return crag_info
+
+
+def add_crag(name, latitude, longitude, description, created_by): # not finished/tested
     sql = """
     INSERT INTO crags (crag_name, latitude, longitude, crag_description, created_by)
     VALUES (:name, :latitude, :longitude, :description, :created_by)"""
     db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "created_by":created_by})
     db.session.commit()
     return True
+
+
+def add_crag_to_favourites(user_id, crag_id): # not finished/tested
+    sql = """
+    INSERT INTO favourite_crags (user_id, crag_id)
+    VALUES (:user_id, :crag_id)"""
+    db.session.execute(text(sql), {"user_id":user_id, "crag_id":crag_id})
+
 
 def search_crags(query): 
     q = query.lower()
