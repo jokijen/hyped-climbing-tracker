@@ -7,11 +7,11 @@ Every user is either a regular user, editor, or administrator.
 The web app is built using Python and Flask. It uses a PostgreSQL database, with HTML and CSS for the frontend.
 
 ## Table of contents
-[Motivation](#Motivation)
-[Application functionality and features](#application-functionality-and-features)
-[Current state of the application](#current-state-of-the-application)
-[Testing the application in production](#testing-the-application-in-production)
-[Credits](#Credits)
+- [Motivation](#Motivation)
+- [Application functionality and features](#application-functionality-and-features)
+- [Current state of the application](#current-state-of-the-application)
+- [Testing the application in production](#testing-the-application-in-production)
+- [Credits](#Credits)
 
 
 ## Motivation
