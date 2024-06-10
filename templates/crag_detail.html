@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ crag_details.crag_name }} | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>{{ crag_details.crag_name }}</h1> 
+        <p><b>{{ crag_details.crag_description }}</b></p>
+        <hr> 
+        <h2>Crag information</h2> 
+        <hr> 
+        Number of climbs: <b>{{ climb_count }}</b><br>
+        Latitude: <b>{{ crag_details.latitude }}</b><br>
+        Longitude: <b>{{ crag_details.longitude }}</b><br>
+        Created by: <b>{{ crag_details.created_by }}</b><br>
+        <hr> 
+        <h2>Climbs at the crag</h2>
+        <hr> 
+        {% for climb in climbs_at_crag %}
+        <h3> {{ climb.climb_name }} </h3>
+        Difficulty (font): <b>{{ climb.difficulty }}</b><br>
+        Type: <b>{{ climb.climb_type }}</b><br>
+        Description: <b>{{ climb.climb_description }}</b><br>
+        Created by: <b>{{ climb.created_by }}</b><br>
+        <a href="/climbs/{{ climb.id }}">Go to climb</a>
+        <hr> 
+        {% endfor %}
+    </div>
+</body>
+</html>
