@@ -25,11 +25,12 @@ CREATE TABLE climbs (
     created_by TEXT,
     created_at TIMESTAMP DEFAULT NOW()
 );
-CREATE TABLE user_climbed (
+CREATE TABLE sends (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
     climb_id INTEGER REFERENCES climbs(id),
-    sent_at DATE,
+    send_date DATE,
+    send_type TEXT CHECK (send_type in ('onsight', 'flash', 'send')),
     review TEXT,
     rating INTEGER DEFAULT 0 CHECK (rating >= 0 AND rating <= 3),
     created_at TIMESTAMP DEFAULT NOW()
