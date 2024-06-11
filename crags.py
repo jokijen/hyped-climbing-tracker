@@ -16,7 +16,7 @@ def get_crag(id):
     return crag_info
 
 
-def add_crag(name, latitude, longitude, description, created_by): # not finished/tested
+def add_new_crag(name, latitude, longitude, description, created_by): 
     sql = """
     INSERT INTO crags (crag_name, latitude, longitude, crag_description, created_by)
     VALUES (:name, :latitude, :longitude, :description, :created_by)"""

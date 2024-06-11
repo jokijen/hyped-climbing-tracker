@@ -81,6 +81,27 @@ def crag_detail(id):
     return render_template("crag_detail.html", id=id, crag_details=crag_details, climbs_at_crag=climbs_at_crag, climb_count=climb_count)
 
 
+@app.route("/add-crag", methods=["GET", "POST"])
+def add_crag():
+    if not users.user_id():
+        return redirect("/")
+
+    if request.method == "GET":
+        return render_template("add_crag.html")
+    
+    if request.method == "POST":
+        crag_name = request.form["crag_name"]
+        latitude = request.form["latitude"]
+        longitude = request.form["longitude"]
+        crag_description = request.form["crag_description"]
+        created_by = request.form["created_by"]
+
+        if crags.add_new_crag(crag_name, latitude, longitude, crag_description, created_by):
+            return redirect("/home")
+        else:
+            return render_template("error.html", message="Something went wrong with adding the crag :( Please try a again.")
+
+
 @app.route("/climbs", methods=["GET", "POST"])
 def climbs_page():
     if not users.user_id():
@@ -101,6 +122,27 @@ def climb_detail(id):
     sends = climbs.get_sends_for_climb_id(id) # all sends by users of that climb
     send_count = len(sends) # total number of sends for the climb
     return render_template("climb_detail.html", id=id, climb_details=climb_details, comments=comments, sends=sends, send_count=send_count)
+
+
+@app.route("/add-climb", methods=["GET", "POST"]) # Not finished: crag_id missing
+def add_climb():
+    if not users.user_id():
+        return redirect("/")
+
+    if request.method == "GET":
+        return render_template("add_climb.html")
+    
+    if request.method == "POST":
+        climb_name = request.form["climb_name"]
+        difficulty = request.form["difficulty"]
+        climb_type = request.form["climb_type"]
+        climb_description = request.form["crag_description"]
+        created_by = request.form["created_by"]
+
+        if crags.add_new_crag(climb_name, climb_type, difficulty, climb_description, created_by):
+            return redirect("/home")
+        else:
+            return render_template("error.html", message="Something went wrong with adding the crag :( Please try a again.")
 
 
 @app.route("/profile", methods=["GET", "POST"])
