@@ -1,6 +1,6 @@
 body {
     background: snow;
-    font-family:Georgia, 'Times New Roman', Times, serif;
+    font-family: Georgia, 'Times New Roman', Times, serif;
     color: #333333;
     line-height: 1.6;
     margin: 0;
@@ -21,6 +21,7 @@ h1, h2, h3 {
 
 h2 {
     font-size: 1.25em;
+    color: teal;
 }
 
 p {
@@ -41,15 +42,23 @@ form label {
     margin-bottom: 5px;
 }
 
-form input[type="email"], form input[type="email"],
-form input[type="text"], form input[type="username"],
-form input[type="text"], form input[type="password"] {
+form input[type="text"],
+form input[type="number"],
+form input[type="email"],
+form input[type="username"],
+form input[type="password"],
+select,
+option,
+textarea {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-sizing: border-box;
+    font-size: 13px;
+    font-family: sans-serif;
+    color: #333333;
 }
 
 form input[type="submit"] {
