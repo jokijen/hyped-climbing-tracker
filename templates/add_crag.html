@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add crag | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>Add a new crag</h1>
+        <p>Fill in the following fields. All fields are required. </p>
+        <form action="/add-crag" method="post">
+            <label for="crag_name">Crag name:</label>
+            <input type="text" id="crag_name" name="crag_name" maxlength="50" placeholder="e.g. Something-something-mountain" required>
+            <label for="latitude">Latitude:</label>
+            <input 
+            type="number" 
+            id="latitude" 
+            name="latitude" 
+            pattern="^-?\d{1,2}\.\d{1,6}$"
+            title="Latitude must be of a valid format e.g. 60.123456"
+            step="0.000001" 
+            min="-90"
+            max="90"
+            placeholder="e.g. 60.123456" 
+            required>
+            <label for="longitude">Longitude:</label>
+            <input 
+            type="number" 
+            id="longitude" 
+            name="longitude" 
+            pattern="^-?\d{1,3}\.\d{1,6}$"
+            title="Longitude must be of a valid format e.g. 26.123456"
+            step="0.000001" 
+            min="-180"
+            max="180"
+            placeholder="e.g. 26.123456" 
+            required>
+            <label for="crag_description">Crag description:</label>
+            <textarea id="crag_description" name="crag_description" maxlength="1000" placeholder="e.g. A north facing, mainly overhanging..." required></textarea>
+            <label for="created_by">Created by:</label>
+            <input type="text" id="created_by" name="created_by" maxlength="50" placeholder="Name, group, or organisation" required>
+            <input type="submit" value="Add crag">
+        </form>
+    </div>
+</body>
+</html>
