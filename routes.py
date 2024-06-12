@@ -7,6 +7,8 @@ from flask import redirect, render_template, request, session
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
+        if users.user_id(): # user already logged in
+            return redirect("/home")
         return render_template("index.html")
     
     if request.method == "POST":
@@ -22,6 +24,8 @@ def index():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "GET":
+        if users.user_id():
+            return redirect("/home")
         return render_template("register.html")
     
     if request.method == "POST":
@@ -49,11 +53,43 @@ def home():
     if not users.user_id(): # if user is not logged in, take to login page
         return redirect("/")
     
-    return render_template("home.html")
+    username = session.get("username")
+    is_admin = users.is_admin()
+
+    return render_template("home.html", username=username, admin=is_admin)
+
+
+@app.route("/favourites")
+def favourites():
+    if not users.user_id():
+        return redirect("/")
+    user_id = users.user_id()
+    favourites = crags.get_favourites(user_id)
+    return render_template("favourites.html", favourites=favourites)
+
+
+@app.route("/ticklist")
+def ticklist():
+    if not users.user_id():
+        return redirect("/")
+    user_id = users.user_id()
+    tick_list = climbs.get_ticklist(user_id)
+    return render_template("ticklist.html", tick_list=tick_list)
+
+
+@app.route("/logged-sends")
+def logged_sends():
+    if not users.user_id():
+        return redirect("/")
+    user_id = users.user_id()
+    sends = climbs.get_sends(user_id)
+    return render_template("logged_sends.html", sends=sends)
 
 
 @app.route("/search", methods=["GET"])
 def search_page():
+    if not users.user_id():
+        return redirect("/")
     query = request.args["query"]
     find_crags = crags.search_crags(query)
     find_climbs = climbs.search_climbs(query)
@@ -62,10 +98,9 @@ def search_page():
 
 @app.route("/crags", methods=["GET", "POST"])
 def crags_page():
-    if not users.user_id():
-        return redirect("/")
-
     if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
         all_crags = crags.get_all_crags()
         return render_template("crags.html", crags_list=all_crags)
     
@@ -83,10 +118,11 @@ def crag_detail(id):
 
 @app.route("/add-crag", methods=["GET", "POST"])
 def add_crag():
-    if not users.user_id():
-        return redirect("/")
-
     if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
+        if not users.is_admin():
+            return render_template("error.html", message="Unfortunately only admins can add crags. Get in touch with us if this is something that interests you.")
         return render_template("add_crag.html")
     
     if request.method == "POST":
@@ -104,10 +140,10 @@ def add_crag():
 
 @app.route("/climbs", methods=["GET", "POST"])
 def climbs_page():
-    if not users.user_id():
-        return redirect("/")
-
     if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
+        
         all_climbs = climbs.get_all_climbs()
         return render_template("climbs.html", climbs_list=all_climbs)
 
@@ -124,25 +160,27 @@ def climb_detail(id):
     return render_template("climb_detail.html", id=id, climb_details=climb_details, comments=comments, sends=sends, send_count=send_count)
 
 
-@app.route("/add-climb", methods=["GET", "POST"]) # Not finished: crag_id missing
+@app.route("/add-climb", methods=["GET", "POST"]) 
 def add_climb():
-    if not users.user_id():
-        return redirect("/")
-
     if request.method == "GET":
-        return render_template("add_climb.html")
+        if not users.user_id():
+            return redirect("/")
+        
+        all_crags = crags.get_all_crags()
+        return render_template("add_climb.html", all_crags=all_crags)
     
     if request.method == "POST":
         climb_name = request.form["climb_name"]
         difficulty = request.form["difficulty"]
         climb_type = request.form["climb_type"]
-        climb_description = request.form["crag_description"]
+        climb_description = request.form["climb_description"]
+        crag_id = request.form["crag_id"]
         created_by = request.form["created_by"]
 
-        if crags.add_new_crag(climb_name, climb_type, difficulty, climb_description, created_by):
+        if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, created_by):
             return redirect("/home")
         else:
-            return render_template("error.html", message="Something went wrong with adding the crag :( Please try a again.")
+            return render_template("error.html", message="Something went wrong with adding the climb :( Please try a again.")
 
 
 @app.route("/profile", methods=["GET", "POST"])
