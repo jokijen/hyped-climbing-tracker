@@ -11,12 +11,8 @@
         <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
     </header>
     <div class="container">
-        <h1>{{ climb_details.climb_name }}</h1> 
-        <p><b>{{ climb_details.climb_description }}</b></p>
-        <hr> 
-        <h2>Climb information</h2> 
-        <hr> 
-        Difficulty (font): <b>{{ climb_details.difficulty }}</b><br>
+        <h1>{{ climb_details.climb_name }}, {{ climb_details.difficulty }}</h1> 
+        <p>- {{ climb_details.climb_description }}</p>
         Type: <b>{{ climb_details.climb_type }}</b><br>
         Logged sends: <b>{{ send_count }}</b><br>
         Created by: <b>{{ climb_details.created_by }}</b><br>
@@ -24,14 +20,14 @@
         <h2>Comments</h2>
         <hr> 
         {% for comment in comments %}
-        <h3>** {{ comment.username }} **</h3>
+        <h3>{{ comment.username }}</h3>
         {{ comment.comment }}<br>
         <hr> 
         {% endfor %}
         <h2>Sends</h2>
         <hr> 
         {% for send in sends %}
-        <h3>** {{ send.username }} **</h3>
+        <h3>{{ send.username }}</h3>
         Send date: <b>{{ send.send_date }}</b><br>
         Send type: <b>{{ send.send_type }}</b><br>
         Rating: <b>{{ send.rating }}</b><br>
