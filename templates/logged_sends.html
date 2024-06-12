@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged sends | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>Logged sends</h1> 
+        <h2 class="hidden">Tick-list</h2> <!-- Hidden heading to not skip a heading tag -->
+        <p>Here are all your logged sends. You go crusher!</p>
+        <hr>
+        {% for climb in sends %}
+        <h3> {{ climb.climb_name }}, {{ climb.difficulty }}</h3>
+        <p>- {{ climb.climb_description }}</p>
+        Send date: <b>{{ climb.send_date }}</b><br>
+        Send type: <b>{{ climb.send_type }}</b><br>
+        Rating: <b>{{ climb.rating }}</b><br>
+        Review: <b>{{ climb.review }}</b><br>
+        <br>
+        Crag: <b>{{ climb.crag_name }}</b><br>
+        Type: <b>{{ climb.climb_type }}</b><br>
+        Created by: <b>{{ climb.created_by }}</b><br>
+        <a href="/climbs/{{ climb.id }}">Go to climb</a>
+        <hr> 
+        {% endfor %}
+    </div>
+</body>
+</html>

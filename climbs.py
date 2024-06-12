@@ -47,11 +47,37 @@ def get_sends_for_climb_id(id): # all sends of that climb
     return sends_for_climb
 
 
-def add_climb(name, difficulty, type, description, created_by): # not finished/tested
+def get_ticklist(user_id):
     sql = """
-    INSERT INTO climbs (climb_name, difficulty, climb_type, climb_description, created_by)
-    VALUES (:name, :difficulty, :type, :description, :created_by)"""
-    db.session.execute(text(sql), {"name":name, "difficulty":difficulty, "type":type, "description":description, "created_by":created_by})
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, c.created_by, t.created_at
+    FROM climbs c, ticklist t
+    WHERE t.climb_id=c.id 
+    AND t.user_id=:user_id 
+    ORDER BY t.created_at DESC"""
+    result = db.session.execute(text(sql), {"user_id":user_id})
+    tick_list = result.fetchall()
+    return tick_list
+
+
+def get_sends(user_id): 
+    sql = """
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by, s.send_date, s.send_type, s.review, s.rating
+    FROM sends s, climbs c, crags r
+    WHERE s.climb_id=c.id 
+    AND s.user_id=:user_id 
+    AND c.crag_id=r.id
+    ORDER BY s.send_date DESC"""
+    result = db.session.execute(text(sql), {"user_id":user_id})
+    logged_sends = result.fetchall()
+    print(logged_sends)
+    return logged_sends
+
+
+def add_new_climb(name, difficulty, type, description, crag_id, created_by): # not finished/tested
+    sql = """
+    INSERT INTO climbs (climb_name, difficulty, climb_type, climb_description, crag_id, created_by)
+    VALUES (:name, :difficulty, :type, :description, :crag_id, :created_by)"""
+    db.session.execute(text(sql), {"name":name, "difficulty":difficulty, "type":type, "description":description, "crag_id":crag_id, "created_by":created_by})
     db.session.commit()
     return True
 

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Favourites | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>Favourites</h1> 
+        <h2 class="hidden">Favourites</h2> <!-- Hidden heading to not skip a heading tag -->
+        <p>Here is a list of your favourite crags, so you don't forget them.</p>
+        <hr>
+        {% for crag in favourites %}
+        <h3> {{ crag.crag_name }} </h3>
+        <p>- {{ crag.crag_description }}</p>
+        Latitude: <b>{{ crag.latitude }}</b> <br>
+        Longitude: <b>{{ crag.longitude }}</b> <br>
+        Created by: <b>{{ crag.created_by }}</b> <br>
+        <a href="/crags/{{ crag.id }}">Go to crag</a>
+        <hr> 
+        {% endfor %}
+    </div>
+</body>
+</html>

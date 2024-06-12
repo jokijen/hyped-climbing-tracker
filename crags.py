@@ -16,6 +16,18 @@ def get_crag(id):
     return crag_info
 
 
+def get_favourites(user_id):
+    sql = """
+    SELECT c.id, c.crag_name, c.latitude, c.longitude, c.crag_description, c.created_by
+    FROM crags c , favourite_crags f
+    WHERE f.crag_id=c.id
+    AND f.user_id=:user_id
+    ORDER BY c.crag_name"""
+    reusult = db.session.execute(text(sql), {"user_id":user_id})
+    favourites = reusult.fetchall()
+    return favourites
+
+
 def add_new_crag(name, latitude, longitude, description, created_by): 
     sql = """
     INSERT INTO crags (crag_name, latitude, longitude, crag_description, created_by)
