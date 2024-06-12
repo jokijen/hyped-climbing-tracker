@@ -12,6 +12,7 @@
     </header>
     <div class="container">
         <h1>Welcome to Hyped</h1>
+        <p>You are logged in as {{ username }}</p>
         <form method="get" action="/search">
             <input type="text" name="query" placeholder="Search for crags or routes">
             <button type="submit">Search</button>
@@ -19,7 +20,7 @@
         <nav>
             <ul>
                 <li><a href="/favourites">Favourite crags</a></li>
-                <li><a href="/tick-list">Tick-list</a></li>
+                <li><a href="/ticklist">Tick-list</a></li>
                 <li><a href="/logged-sends">Logged sends</a></li>
             </ul>
             <ul>
@@ -27,13 +28,15 @@
                 <li><a href="/climbs">Browse all climbs</a></li>
                 <li><a href="/random">Get random crag and climb</a></li>
             </ul>
-            <ul>
-                <li><a href="/profile">Profile</a></li>
-                <li><a href="/logout">Logout</a></li>
-            </ul>
+            {% if admin %}
             <ul>
                 <li><a href="/add-crag">Add crag</a></li>
                 <li><a href="/add-climb">Add climb</a></li>
+            </ul>
+            {% endif %}
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
     </div>

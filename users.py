@@ -4,12 +4,13 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.sql import text
 
 def login(username, password):
-    sql = "SELECT id, password FROM users WHERE username=:username"
+    sql = "SELECT id, password, administrator FROM users WHERE username=:username"
     result = db.session.execute(text(sql), {"username":username})
     user = result.fetchone()
     if user and check_password_hash(user.password, password):
         session["user_id"] = user.id
         session["username"] = username
+        session["admin"] = user.administrator
         return True
     return False
         
@@ -31,3 +32,7 @@ def register(username, email, password):
 
 def user_id():
     return session.get("user_id")
+
+
+def is_admin():
+    return session.get("admin", False)
