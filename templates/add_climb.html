@@ -35,15 +35,15 @@
             <label for="climb_type">Type:</label>
             <select id="climb_type" name="climb_type" required>
                 <option value="" disabled selected>Select type</option>
-                <option value="DWS">DWS</option>
                 <option value="boulder">boulder</option>
+                <option value="DWS">DWS</option>
                 <option value="sport">sport</option>
                 <option value="trad">trad</option>
             </select>
             <label for="climb_description">Climb description:</label>
             <textarea id="climb_description" name="climb_description" maxlength="1000" placeholder="e.g. Overhanging. Sit-start from the jug..." required></textarea>
-            <label for="created_by">Created by:</label>
-            <input type="text" id="created_by" name="created_by" maxlength="50" placeholder="Person, group, or organisation" required>
+            <label for="manager">Managed by:</label>
+            <input type="text" id="manager" name="manager" maxlength="50" placeholder="Person, group, or organisation" required>
             <input type="submit" value="Add climb">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>

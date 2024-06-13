@@ -29,7 +29,7 @@
         </p>
         Latitude: <b>{{ crag.latitude }}</b><br>
         Longitude: <b>{{ crag.longitude }}</b><br>
-        Created by: <b>{{ crag.created_by }}</b><br>
+        Managed by: <b>{{ crag.manager }}</b><br>
         <a href="/crags/{{ crag.id }}">Go to crag</a>
         <hr> 
         {% endfor %}
@@ -44,7 +44,7 @@
         </p>
         Crag: <b>{{ climb.crag_name }}</b><br>
         Type: <b>{{ climb.climb_type }}</b><br>
-        Created by: <b>{{ climb.created_by }}</b><br>
+        Managed by: <b>{{ climb.manager }}</b><br>
         <a href="/climbs/{{ climb.id }}">Go to climb</a>
         <hr> 
         {% endfor %}

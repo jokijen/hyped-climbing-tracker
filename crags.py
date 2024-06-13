@@ -18,7 +18,7 @@ def get_crag(id):
 
 def get_favourites(user_id):
     sql = """
-    SELECT c.id, c.crag_name, c.latitude, c.longitude, c.crag_description, c.created_by
+    SELECT c.id, c.crag_name, c.latitude, c.longitude, c.crag_description, c.manager
     FROM crags c , favourite_crags f
     WHERE f.crag_id=c.id
     AND f.user_id=:user_id
@@ -28,11 +28,11 @@ def get_favourites(user_id):
     return favourites
 
 
-def add_new_crag(name, latitude, longitude, description, created_by): 
+def add_new_crag(name, latitude, longitude, description, manager, created_by): 
     sql = """
-    INSERT INTO crags (crag_name, latitude, longitude, crag_description, created_by)
-    VALUES (:name, :latitude, :longitude, :description, :created_by)"""
-    db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "created_by":created_by})
+    INSERT INTO crags (crag_name, latitude, longitude, crag_description, manager, created_by)
+    VALUES (:name, :latitude, :longitude, :description, :manager, :created_by)"""
+    db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "manager":manager, "created_by":created_by})
     db.session.commit()
     return True
 
@@ -50,7 +50,7 @@ def search_crags(query):
     SELECT * FROM crags 
     WHERE LOWER(crag_name) LIKE :q 
     OR LOWER(crag_description) LIKE :q
-    OR LOWER(created_by) LIKE :q"""
+    OR LOWER(manager) LIKE :q"""
     result = db.session.execute(text(sql), {"q":"%"+q+"%"})
     found_crags = result.fetchall()
     return found_crags

@@ -4,7 +4,7 @@ from sqlalchemy import text
 
 def get_all_climbs():
     sql = """
-    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by 
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.manager, c.created_by 
     FROM climbs c, crags r
     WHERE c.crag_id=r.id
     ORDER BY climb_name"""
@@ -15,7 +15,7 @@ def get_all_climbs():
 
 def get_climb(id):
     sql = """
-    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by 
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.manager, c.created_by 
     FROM climbs c, crags r
     WHERE c.crag_id=r.id 
     AND c.id=:id"""
@@ -26,7 +26,7 @@ def get_climb(id):
 
 def get_climbs_by_crag_id(crag_id):
     sql = """
-    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by 
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.manager, c.created_by 
     FROM climbs c, crags r
     WHERE c.crag_id=r.id 
     AND c.crag_id=:crag_id"""
@@ -61,7 +61,7 @@ def get_sends_for_climb_id(id): # all sends of that climb
 
 def get_ticklist(user_id):
     sql = """
-    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by, t.created_at
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.manager, c.created_by, t.created_at
     FROM climbs c, ticklist t, crags r
     WHERE t.climb_id=c.id 
     AND t.user_id=:user_id 
@@ -74,7 +74,7 @@ def get_ticklist(user_id):
 
 def get_sends(user_id): 
     sql = """
-    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by, s.send_date, s.send_type, s.review, s.rating
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.manager, c.created_by, s.send_date, s.send_type, s.review, s.rating
     FROM climbs c, sends s, crags r
     WHERE s.climb_id=c.id 
     AND s.user_id=:user_id 
@@ -86,11 +86,11 @@ def get_sends(user_id):
     return logged_sends
 
 
-def add_new_climb(name, difficulty, type, description, crag_id, created_by): # not finished/tested
+def add_new_climb(name, difficulty, type, description, crag_id, manager, created_by): 
     sql = """
-    INSERT INTO climbs (climb_name, difficulty, climb_type, climb_description, crag_id, created_by)
-    VALUES (:name, :difficulty, :type, :description, :crag_id, :created_by)"""
-    db.session.execute(text(sql), {"name":name, "difficulty":difficulty, "type":type, "description":description, "crag_id":crag_id, "created_by":created_by})
+    INSERT INTO climbs (climb_name, difficulty, climb_type, climb_description, crag_id, manager, created_by)
+    VALUES (:name, :difficulty, :type, :description, :crag_id, :manager, :created_by)"""
+    db.session.execute(text(sql), {"name":name, "difficulty":difficulty, "type":type, "description":description, "crag_id":crag_id, "manager":manager, "created_by":created_by})
     db.session.commit()
     return True
 
@@ -98,7 +98,7 @@ def add_new_climb(name, difficulty, type, description, crag_id, created_by): # n
 def search_climbs(query): 
     q = query.lower()
     sql = """
-    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.created_by 
+    SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.manager 
     FROM climbs c 
     JOIN crags r ON c.crag_id=r.id
     WHERE (
@@ -107,10 +107,10 @@ def search_climbs(query):
     OR LOWER(c.climb_type) LIKE :q
     OR LOWER(c.climb_description) LIKE :q
     OR LOWER(r.crag_name) LIKE :q
-    OR LOWER(c.created_by) LIKE :q
+    OR LOWER(c.manager) LIKE :q
     )
     ORDER BY c.climb_name
     """
     result = db.session.execute(text(sql), {"q":"%"+q+"%"})
-    found_crags = result.fetchall()
-    return found_crags
+    found_climbs = result.fetchall()
+    return found_climbs

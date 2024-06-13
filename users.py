@@ -47,3 +47,14 @@ def user_id():
 
 def is_admin():
     return session.get("admin", False)
+
+
+def is_suspended(username):
+    sql = "SELECT suspended FROM users WHERE username=:username"
+    result = db.session.execute(text(sql), {"username":username})
+    user = result.fetchone()
+    print(user)
+    if user[0]: 
+        print(user[0])
+        return True
+    return False

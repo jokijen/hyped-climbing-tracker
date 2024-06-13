@@ -22,7 +22,7 @@
         Number of climbs: <b>{{ climb_count }}</b><br>
         Latitude: <b>{{ crag_details.latitude }}</b><br>
         Longitude: <b>{{ crag_details.longitude }}</b><br>
-        Created by: <b>{{ crag_details.created_by }}</b><br>
+        Managed by: <b>{{ crag_details.manager }}</b><br>
         <hr> 
         <h2>Climbs at the crag</h2>
         <hr> 
@@ -33,7 +33,7 @@
             {{ climb.climb_description }}
         </p>
         Type: <b>{{ climb.climb_type }}</b><br>
-        Created by: <b>{{ climb.created_by }}</b><br>
+        Managed by: <b>{{ climb.manager }}</b><br>
         <a href="/climbs/{{ climb.id }}">Go to climb</a>
         <hr> 
         {% endfor %}

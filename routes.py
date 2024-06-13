@@ -15,6 +15,8 @@ def index():
         username = request.form["username"]
         password = request.form["password"]
 
+        if users.is_suspended(username):
+            return render_template("error.html", message="Your account has been suspended. Please contact us to sort it out.")
         if users.user_login(username, password):
             return redirect("/home")
         else:
@@ -139,9 +141,10 @@ def add_crag():
         latitude = request.form["latitude"]
         longitude = request.form["longitude"]
         crag_description = request.form["crag_description"]
-        created_by = request.form["created_by"]
+        manager = request.form["manager"]
+        created_by = users.user_id()
 
-        if crags.add_new_crag(crag_name, latitude, longitude, crag_description, created_by):
+        if crags.add_new_crag(crag_name, latitude, longitude, crag_description, manager, created_by):
             return redirect("/home")
         else:
             return render_template("error.html", message="Something went wrong with adding the crag :( Please try a again.")
@@ -187,9 +190,10 @@ def add_climb():
         climb_type = request.form["climb_type"]
         climb_description = request.form["climb_description"]
         crag_id = request.form["crag_id"]
-        created_by = request.form["created_by"]
+        manager = request.form["manager"]
+        created_by = users.user_id()
 
-        if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, created_by):
+        if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, manager, created_by):
             return redirect("/home")
         else:
             return render_template("error.html", message="Something went wrong with adding the climb :( Please try a again.")
