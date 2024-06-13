@@ -1,6 +1,6 @@
 from app import app
 import climbs, crags, users
-from flask import redirect, render_template, abort, request, session
+from flask import redirect, render_template, abort, flash, request, session
 
 
 @app.route("/index", methods=["GET", "POST"]) # landing/login page
@@ -34,12 +34,18 @@ def register():
         password1 = request.form["password1"]
         password2 = request.form["password2"]
 
+        if not users.is_valid_password(password1):
+            flash("Password must be at least 8 characters long and contain at least one number", "error")
+            return redirect("/register")
+        
         if password1 != password2:
-            return render_template("error.html", message="The passwords do not match")
+            flash("The passwords do not match.", "error")
+            return redirect("/register")
+        
         if users.register_user(username, email, password1):
             return redirect("/home")
-        else:
-            return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, other error.) Please try a again.")
+        
+        return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, email already has an account, or other error.) Please try a again.")
 
 
 @app.route("/logout")

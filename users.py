@@ -1,8 +1,17 @@
+import re
 import secrets
 from db import db
 from flask import session
 from werkzeug.security import check_password_hash, generate_password_hash
 from sqlalchemy.sql import text
+
+def is_valid_password(password): 
+    if len(password) < 8: # password must be min. 8 characters long 
+        return False
+    if not re.search(r"\d", password): # must contain at least one number
+        return False
+    return True
+
 
 def user_login(username, password):
     sql = "SELECT id, password, administrator FROM users WHERE username=:username"

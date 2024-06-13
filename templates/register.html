@@ -21,6 +21,17 @@
             <li>maintain a tick-list</li>
         </ul>
         <p>Fill in the following fields to register.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+        {% if messages %} 
+        <ul> 
+            {% for category, message in messages %} 
+            <li class="{{ category }}">Error: {{ message }}</li> 
+            {% endfor %} 
+        </ul> 
+        {% endif %} 
+        {% endwith %}
+
         <form action="/register" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>
@@ -33,9 +44,21 @@
                 title="Email must be of a valid format e.g. address@domain.com"
                 required>
             <label for="password1">Password:</label>
-            <input type="password" id="password1" name="password1" required>
+            <input 
+                type="password" 
+                id="password1" 
+                name="password1" 
+                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                title="Password must be at least 8 characters long and contain at least one number."
+                required>
             <label for="password2">Password again:</label>
-            <input type="password" id="password2" name="password2" required>
+            <input 
+                type="password" 
+                id="password2" 
+                name="password2" 
+                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                title="Password must be at least 8 characters long and contain at least one number."
+                required>
             <input type="submit" value="Create account">
         </form>
     </div>
