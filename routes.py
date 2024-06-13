@@ -1,6 +1,6 @@
 from app import app
 import climbs, crags, users
-from flask import redirect, render_template, request, session
+from flask import redirect, render_template, abort, request, session
 
 
 @app.route("/index", methods=["GET", "POST"]) # landing/login page
@@ -15,7 +15,7 @@ def index():
         username = request.form["username"]
         password = request.form["password"]
 
-        if users.login(username, password):
+        if users.user_login(username, password):
             return redirect("/home")
         else:
             return render_template("error.html", message="Incorrect username or password")
@@ -36,7 +36,7 @@ def register():
 
         if password1 != password2:
             return render_template("error.html", message="The passwords do not match")
-        if users.register(username, email, password1):
+        if users.register_user(username, email, password1):
             return redirect("/home")
         else:
             return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, other error.) Please try a again.")
@@ -44,7 +44,7 @@ def register():
 
 @app.route("/logout")
 def logout():
-    users.logout() # clears the session
+    users.user_logout() # clears the session
     return render_template("logout.html")
     
 
@@ -122,10 +122,13 @@ def add_crag():
         if not users.user_id():
             return redirect("/")
         if not users.is_admin():
-            return render_template("error.html", message="Unfortunately only admins can add crags. Get in touch with us if this is something that interests you.")
+            return render_template("error.html", message="Only admins can add crags. Get in touch with us if this is something that interests you.")
         return render_template("add_crag.html")
     
     if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]: # invalid or no csrf token
+            abort(403)
+
         crag_name = request.form["crag_name"]
         latitude = request.form["latitude"]
         longitude = request.form["longitude"]
@@ -170,6 +173,9 @@ def add_climb():
         return render_template("add_climb.html", all_crags=all_crags)
     
     if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+
         climb_name = request.form["climb_name"]
         difficulty = request.form["difficulty"]
         climb_type = request.form["climb_type"]

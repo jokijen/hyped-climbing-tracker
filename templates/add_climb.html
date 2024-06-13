@@ -45,6 +45,7 @@
             <label for="created_by">Created by:</label>
             <input type="text" id="created_by" name="created_by" maxlength="50" placeholder="Person, group, or organisation" required>
             <input type="submit" value="Add climb">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </div>
 </body>
