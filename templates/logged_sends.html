@@ -17,7 +17,10 @@
         <hr>
         {% for climb in sends %}
         <h3> {{ climb.climb_name }}, {{ climb.difficulty }}</h3>
-        <p>- {{ climb.climb_description }}</p>
+        <p>
+            <span>&#x2022;</span>
+            {{ climb.climb_description }}
+        </p>
         Send date: <b>{{ climb.send_date }}</b><br>
         Send type: <b>{{ climb.send_type }}</b><br>
         Rating: <b>{{ climb.rating }}</b><br>

@@ -12,7 +12,11 @@
     </header>
     <div class="container">
         <h1>{{ climb_details.climb_name }}, {{ climb_details.difficulty }}</h1> 
-        <p>- {{ climb_details.climb_description }}</p>
+        <p>
+            <span>&#x2022;</span>
+            {{ climb_details.climb_description }}
+        </p>
+        Crag: <b>{{ climb_details.crag_name }}</b><br>
         Type: <b>{{ climb_details.climb_type }}</b><br>
         Logged sends: <b>{{ send_count }}</b><br>
         Created by: <b>{{ climb_details.created_by }}</b><br>

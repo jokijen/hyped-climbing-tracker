@@ -17,7 +17,11 @@
         <hr>
         {% for climb in climbs_list %}
         <h3> {{ climb.climb_name }}, {{ climb.difficulty }} </h3>
-        <p>- {{ climb.climb_description }}</p>
+        <p>
+            <span>&#x2022;</span>
+            {{ climb.climb_description }}
+        </p>
+        Crag: <b>{{ climb.crag_name }}</b><br>
         Type: <b>{{ climb.climb_type }}</b><br>
         Created by: <b>{{ climb.created_by }}</b><br>
         <a href="/climbs/{{ climb.id }}">Go to climb</a>
