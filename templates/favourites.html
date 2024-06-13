@@ -17,7 +17,10 @@
         <hr>
         {% for crag in favourites %}
         <h3> {{ crag.crag_name }} </h3>
-        <p>- {{ crag.crag_description }}</p>
+        <p>
+            <span>&#x2022;</span>
+            {{ crag.crag_description }}
+        </p>
         Latitude: <b>{{ crag.latitude }}</b> <br>
         Longitude: <b>{{ crag.longitude }}</b> <br>
         Created by: <b>{{ crag.created_by }}</b> <br>
