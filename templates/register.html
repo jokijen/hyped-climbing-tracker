@@ -21,7 +21,6 @@
             <li>maintain a tick-list</li>
         </ul>
         <p>Fill in the following fields to register.</p>
-
         {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
         <ul> 
@@ -31,7 +30,6 @@
         </ul> 
         {% endif %} 
         {% endwith %}
-
         <form action="/register" method="post">
             <label for="username">Username:</label>
             <input type="text" id="username" name="username" required>

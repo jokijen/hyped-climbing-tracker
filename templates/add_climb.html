@@ -22,7 +22,7 @@
                 {% endfor %}
             </select>
             <label for="climb_name">Climb name:</label>
-            <input type="text" id="climb_name" name="climb_name" maxlength="50" placeholder="e.g. Something awesome and not too rude, please" required>
+            <input type="text" id="climb_name" name="climb_name" maxlength="50" placeholder="Something awesome and not too rude, please" required>
             <label for="difficulty">Difficulty:</label> <!-- Does not work correctly: Pattern -->
             <input 
             type="text" 
@@ -42,8 +42,8 @@
             </select>
             <label for="climb_description">Climb description:</label>
             <textarea id="climb_description" name="climb_description" maxlength="1000" placeholder="e.g. Overhanging. Sit-start from the jug..." required></textarea>
-            <label for="manager">Managed by:</label>
-            <input type="text" id="manager" name="manager" maxlength="50" placeholder="Person, group, or organisation" required>
+            <label for="first_ascent">First ascent:</label>
+            <input type="text" id="first_ascent" name="first_ascent" maxlength="50" placeholder="Name" required>
             <input type="submit" value="Add climb">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
