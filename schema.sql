@@ -24,7 +24,7 @@ CREATE TABLE climbs (
     climb_type VARCHAR(10) CHECK (climb_type in ('boulder', 'DWS', 'sport', 'trad')) NOT NULL,
     climb_description VARCHAR(1000),
     crag_id INTEGER REFERENCES crags(id) NOT NULL,
-    manager VARCHAR(55),
+    first_ascent VARCHAR(55),
     created_by INTEGER REFERENCES users(id) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
 );
@@ -36,6 +36,7 @@ CREATE TABLE sends (
     send_type VARCHAR(10) CHECK (send_type in ('onsight', 'flash', 'send')) NOT NULL,
     review VARCHAR(1000),
     rating INTEGER DEFAULT 0 CHECK (rating >= 0 AND rating <= 3),
+    deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE favourite_crags (
@@ -48,6 +49,7 @@ CREATE TABLE ticklist (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) NOT NULL,
     climb_id INTEGER REFERENCES climbs(id) NOT NULL,
+    deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE comments (
@@ -55,5 +57,6 @@ CREATE TABLE comments (
     user_id INTEGER REFERENCES users(id) NOT NULL,
     climb_id INTEGER REFERENCES climbs(id) NOT NULL,
     comment VARCHAR(1000),
+    deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
