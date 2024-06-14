@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>Profile</h1>
+        <h2>{{ user_info.username }}</h2>
+        <p>
+            Email: <b>{{ user_info.email}}</b><br>
+            Joined: <b>{{ user_info.creation_date }}</b>
+        </p>
+        <h3>Change your password</h3>
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+        {% if messages %} 
+        <ul> 
+            {% for category, message in messages %} 
+            <li class="{{ category }}">{{ message }}</li> 
+            {% endfor %} 
+        </ul> 
+        {% endif %} 
+        {% endwith %}
+        <form action="/profile" method="post">
+            <label for="old_password">Old password:</label>
+            <input 
+                type="password" 
+                id="old_password" 
+                name="old_password" 
+                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                title="Password must be at least 8 characters long and contain at least one number."
+                required>
+            <label for="password1">New password:</label>
+            <input 
+                type="password" 
+                id="password1" 
+                name="password1" 
+                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                title="Password must be at least 8 characters long and contain at least one number."
+                required>
+            <label for="password2">New password again:</label>
+            <input 
+                type="password" 
+                id="password2" 
+                name="password2" 
+                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                title="Password must be at least 8 characters long and contain at least one number."
+                required>
+            <input type="submit" value="Change password">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+
+    </div>
+</body>
+</html>

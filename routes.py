@@ -145,7 +145,7 @@ def add_crag():
         created_by = users.user_id()
 
         if crags.add_new_crag(crag_name, latitude, longitude, crag_description, manager, created_by):
-            return redirect("/home")
+            return redirect("/crags")
         else:
             return render_template("error.html", message="Something went wrong with adding the crag :( Please try a again.")
 
@@ -169,7 +169,7 @@ def climb_detail(id):
     comments = climbs.get_comments_for_climb_id(id) # all comments of that climb
     sends = climbs.get_sends_for_climb_id(id) # all sends by users of that climb
     send_count = len(sends) # total number of sends for the climb
-    return render_template("climb_detail.html", id=id, climb_details=climb_details, comments=comments, sends=sends, send_count=send_count)
+    return render_template("climb_detail.html", climb_details=climb_details, comments=comments, sends=sends, send_count=send_count)
 
 
 @app.route("/add-climb", methods=["GET", "POST"]) 
@@ -190,15 +190,74 @@ def add_climb():
         climb_type = request.form["climb_type"]
         climb_description = request.form["climb_description"]
         crag_id = request.form["crag_id"]
-        manager = request.form["manager"]
+        first_ascent = request.form["first_ascent"]
         created_by = users.user_id()
 
-        if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, manager, created_by):
-            return redirect("/home")
+        if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, first_ascent, created_by):
+            return redirect("/climbs")
         else:
             return render_template("error.html", message="Something went wrong with adding the climb :( Please try a again.")
 
 
+@app.route("/log-send/<int:id>", methods=["GET", "POST"]) 
+def log_send(id):
+    if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
+        
+        climb_details = climbs.get_climb(id)
+        return render_template("log_send.html", climb_details=climb_details)
+    
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+
+        user_id = users.user_id()
+        climb_id = id
+        send_date = request.form["send_date"]
+        send_type = request.form["send_type"]
+        review = request.form["review"]
+        rating = request.form["rating"]
+
+        if climbs.add_send(user_id, climb_id, send_date, send_type, review, rating):
+            return redirect("/logged-sends")
+        
+        else:
+            return render_template("error.html", message="Something went wrong with logging the send :( Please try a again.")
+
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    pass
+    if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
+        
+        user_id = users.user_id()
+        user_info = users.get_user_info(user_id)
+        return render_template("profile.html", user_info=user_info)
+    
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        user_id = users.user_id()
+        old_password = request.form["old_password"]
+        password1 = request.form["password1"]
+        password2 = request.form["password2"]
+
+        if not users.is_valid_password(password1):
+            flash("Password must be at least 8 characters long and contain at least one number", "error")
+            return redirect("/profile")
+        
+        if password1 != password2:
+            flash("The passwords do not match", "error")
+            return redirect("/profile")
+        
+        if not users.validate_password(user_id, old_password):
+            flash("Incorrect password", "error")
+            return redirect("/profile")
+
+        if users.change_password(user_id, password1):
+            flash("Password successfully changed", "success")
+            return redirect("/profile")
+        
+        return render_template("error.html", message="The operation was unsuccessful. Please try a again.")
