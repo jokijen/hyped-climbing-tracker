@@ -3,14 +3,14 @@ from sqlalchemy import text
 
 
 def get_all_crags():
-    sql = "SELECT * FROM crags ORDER BY crag_name"
+    sql = "SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by FROM crags ORDER BY crag_name"
     result = db.session.execute(text(sql))
     all_crags = result.fetchall()
     return all_crags
 
 
 def get_crag(id):
-    sql = "SELECT * FROM crags WHERE id=:id"
+    sql = "SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by FROM crags WHERE id=:id"
     result = db.session.execute(text(sql), {"id":id})
     crag_info = result.fetchone()
     return crag_info
@@ -44,13 +44,22 @@ def add_crag_to_favourites(user_id, crag_id): # not finished/tested
     db.session.execute(text(sql), {"user_id":user_id, "crag_id":crag_id})
 
 
-def search_crags(query): 
+def search_crags(query): # search shows more relevant results first
     q = query.lower()
     sql = """
-    SELECT * FROM crags 
-    WHERE LOWER(crag_name) LIKE :q 
+    SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by
+    FROM crags 
+    WHERE (
+    LOWER(crag_name) LIKE :q 
     OR LOWER(crag_description) LIKE :q
-    OR LOWER(manager) LIKE :q"""
+    OR LOWER(manager) LIKE :q
+    )
+    ORDER BY
+    CASE
+        WHEN LOWER(crag_name) LIKE :q THEN 1
+        WHEN LOWER(crag_description) LIKE :q THEN 2
+        ELSE 3
+    END"""
     result = db.session.execute(text(sql), {"q":"%"+q+"%"})
     found_crags = result.fetchall()
     return found_crags
