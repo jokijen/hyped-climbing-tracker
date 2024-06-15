@@ -1,5 +1,6 @@
 from db import db
 from sqlalchemy import text
+import random 
 
 
 def get_all_climbs():
@@ -41,6 +42,7 @@ def get_comments_for_climb_id(id): # all comments for that climb
     FROM users u, comments c
     WHERE c.climb_id=:id 
     AND c.user_id=u.id
+    AND c.deleted IS NOT TRUE
     ORDER BY c.created_at DESC"""
     result = db.session.execute(text(sql), {"id":id})
     comments_for_climb = result.fetchall()
@@ -53,6 +55,7 @@ def get_sends_for_climb_id(id): # all sends of that climb
     FROM users u, sends c
     WHERE c.climb_id=:id 
     AND c.user_id=u.id
+    AND c.deleted IS NOT TRUE
     ORDER BY c.send_date DESC"""
     result = db.session.execute(text(sql), {"id":id})
     sends_for_climb = result.fetchall()
@@ -72,7 +75,7 @@ def get_ticklist(user_id):
     return tick_list
 
 
-def get_sends(user_id): 
+def get_sends_for_user(user_id): 
     sql = """
     SELECT c.id, c.climb_name, c.difficulty, c.climb_type, c.climb_description, c.crag_id, r.crag_name, c.first_ascent, c.created_by, s.send_date, s.send_type, s.review, s.rating
     FROM climbs c, sends s, crags r
@@ -82,8 +85,14 @@ def get_sends(user_id):
     ORDER BY s.send_date DESC"""
     result = db.session.execute(text(sql), {"user_id":user_id})
     logged_sends = result.fetchall()
-    print(logged_sends)
     return logged_sends
+
+
+def get_random_climb():
+    sql = "SELECT id FROM climbs"
+    result = db.session.execute(text(sql))
+    all_ids = [row[0] for row in result.fetchall()]
+    return random.choice(all_ids)
 
 
 def add_new_climb(name, difficulty, type, description, crag_id, first_ascent, created_by): 

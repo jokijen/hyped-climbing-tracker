@@ -90,7 +90,7 @@ def logged_sends():
     if not users.user_id():
         return redirect("/")
     user_id = users.user_id()
-    sends = climbs.get_sends(user_id)
+    sends = climbs.get_sends_for_user(user_id)
     return render_template("logged_sends.html", sends=sends)
 
 
@@ -224,6 +224,20 @@ def log_send(id):
         
         else:
             return render_template("error.html", message="Something went wrong with logging the send :( Please try a again.")
+
+
+@app.route("/random")
+def random():
+    if not users.user_id():
+        return redirect("/")
+
+    random_crag_id = crags.get_random_crag()
+    random_climb_id = climbs.get_random_climb()
+    crag_details = crags.get_crag(random_crag_id)
+    climb_details = climbs.get_climb(random_climb_id)
+
+    return render_template("random.html", crag_details=crag_details, climb_details=climb_details)
+
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():

@@ -1,5 +1,6 @@
 from db import db
 from sqlalchemy import text
+import random
 
 
 def get_all_crags():
@@ -26,6 +27,13 @@ def get_favourites(user_id):
     reusult = db.session.execute(text(sql), {"user_id":user_id})
     favourites = reusult.fetchall()
     return favourites
+
+
+def get_random_crag():
+    sql = "SELECT id FROM crags"
+    result = db.session.execute(text(sql))
+    all_ids = [row[0] for row in result.fetchall()]    
+    return random.choice(all_ids)
 
 
 def add_new_crag(name, latitude, longitude, description, manager, created_by): 

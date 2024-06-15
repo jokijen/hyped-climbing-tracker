@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ crag_details.crag_name }} | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <header>
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+    </header>
+    <div class="container">
+        <h1>Random crag and climb</h1>
+        <p>Already climbed your projects or just plain bored? Here you go!</p>
+        <hr> 
+        <h2>Crag</h2>
+        <hr> 
+        <h3>{{ crag_details.crag_name }}</h3> 
+        <p>
+            <span>&#x2022;</span>
+            {{ crag_details.crag_description }}
+        </p>
+        <h4>Crag information</h4> 
+        Latitude: <b>{{ crag_details.latitude }}</b><br>
+        Longitude: <b>{{ crag_details.longitude }}</b><br>
+        Managed by: <b>{{ crag_details.manager }}</b><br>
+        <a href="/crags/{{ crag_details.id }}">Go to crag</a>
+        <hr> 
+        <h2>Climb</h2>
+        <hr> 
+        <h3>{{ climb_details.climb_name }}, {{ climb_details.difficulty }}</h3> 
+        <p>
+            <span>&#x2022;</span>
+            {{ climb_details.climb_description }}
+        </p>
+        Crag: <b>{{ climb_details.crag_name }}</b><br>
+        Type: <b>{{ climb_details.climb_type }}</b><br>
+        First ascent: <b>{{ climb_details.first_ascent }}</b><br>
+        <a href="/climbs/{{ climb_details.id }}">Go to climb</a> | 
+        <a href="/log-send/{{ climb_details.id }}">Log as sent</a>
+    </div>
+</body>
+</html>
