@@ -36,16 +36,17 @@ This project has been created for learning purposes and the course "Tietokannat 
 - Common to users.
 - Crags have a name, location, count of routes, and count of times favourited by users.
 
-### Routes
+### Climbs
 
 - Common to users.
-- Routes have a name, difficulty/grade (font-grade), and type (boulder, sport, trad, DWS).
-- Each route also has a rating (stars: 0–3) calculated from user ratings, count of logged climbs, and public user comments.
+- Climbs have a name, difficulty/grade (font-grade), and type (boulder, sport, trad, DWS).
+- Each route also has a rating (0–3) calculated from user ratings, count of logged sends, and public user comments.
 
 ### Logbook and tick-list
 
 - Personal to users.
-- Logbook and tick-list consist of individual routes added by the user.
+- Logbook and tick-list consist of individual routes added by the user. 
+- Once a user logs a climb, it will vanish from the tick-list if it was there. 
 
 ### Favourite crags
 
@@ -55,14 +56,16 @@ This project has been created for learning purposes and the course "Tietokannat 
 
 ## Current state of the application
 
-The development of the Hyped application is progressing with early versions of many key components either initiated or done:
+The development of the Hyped application is progressing well with the main stucture in place. There has been some development in what functionality seems necessary and important for the application. 
+
+- Usability and features: Users can register and log in/out. Users can view their profile and change their password. Sessions are managed. Users can search for crags/climbs and mark climbs as sent. Users can view crag/climb information, including comments and sends logged by users. Admin users can add crags and climbs. 
+- Backend / Python, Flask: There are files for routes, users, crags, and climbs to manage different aspects of the app. 
+- Database: A database schema has been created and updated from the intial version. There is also a data-dump file for testing purposes. 
+- Front / HTML: The login and registration pages are complete. The home page visible after login has a structure in place, but it's not finalised yet. The favourite crags, tick-list, and logged sends of users, as well as crag and climb pages are almost finished. There is a profile page for the user (with the possibility to change the password). Flash messaging has been introduced to most forms to give the user feeback. 
+- Formatting: A style.css file has been created for formatting, and a logo has been designed in both black and white. The style of the website is not yet finalized. 
+- Next up: Users can add crags to favourites. Users can add climbs to tick-lists. Users can write and delete their comments. Users can delete their sends. 
  
-- Backend (Python, Flask): The routes.py file has been started. Additionally, there are various Python files including climbs.py, crags.py, and users.py to manage different aspects of the app. Users can log in/out and a session is managed. There is also a functioning search. 
-- Database: A database schema has been created. 
-- HTML: The login and registration pages are complete. The home page visible after login has a structure in place. The favourites, tick-list, and logged sends of users, as well as crag and climb pages are almost finished. 
-- Formatting: An initial style.css file has been created for formatting, and a logo has been designed in both black and white. The style of the website is not yet finalized, which is why there may be small variation across pages.
- 
-Overall, the project has made decent progress with several base elements in place or initiated. All feedback is very welcome. Development will continue on from here.
+Overall, the project has made decent progress with several key elements nearly completed or initiated. All feedback is very welcome. Development will continue on from here.
 
 
 ## Testing the application in production
@@ -75,7 +78,7 @@ You can test the application by taking the following steps:
 5. Install all the necessary packages using pip with $ pip install -r requirements.txt
 6. Start up PostgreSQL with $ start-pg.sh (you can use it in terminal with the command psql) - PostgreSQL was installed using a custom installation script that can be found here: https://github.com/hy-tsoha/local-pg
 7. Set up the database schema, (in the app directory) run $ psql < schema.sql
-8. If you want to populate your database, create two users by registering and run the following command (in the app directory) run $ psql < prepared_data.sql
+8. If you want to populate your database, create two users by running the app and registering new users, and then run the commands in the prepared data file. Run the following command (in the app directory) run $ psql < prepared_data.sql
 8. Start the application with $ flask run
 
 
@@ -83,3 +86,4 @@ You can test the application by taking the following steps:
 
 - Logo font: Befolk (free commercial license) by Hendra Dirtyline at Dirtyline Studio
 https://dirtylinestudio.com/product/befolk-script/
+- Prepared data: ChatGPT-4o has been very helpful in creating test input data for the database. Nevertheless, most crags and climbs are existing ones. 
