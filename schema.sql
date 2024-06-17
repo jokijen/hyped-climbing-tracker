@@ -56,7 +56,7 @@ CREATE TABLE comments (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) NOT NULL,
     climb_id INTEGER REFERENCES climbs(id) NOT NULL,
-    comment VARCHAR(1000),
+    content VARCHAR(1000),
     deleted BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT NOW()
 );
