@@ -23,10 +23,26 @@
         <a href="/log-send/{{ climb_details.id }}">Log as sent</a>
         <hr> 
         <h2>Comments</h2>
+        <hr>
+        <!-- Add a new comment -->
+        <form class="comment-form" action="/climbs/{{ climb_details.id }}" method="post">
+            <textarea id="content" name="content" maxlength="1000" placeholder="Comment on the climb" required></textarea>
+            <input type="submit" value="Post comment">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
         <hr> 
         {% for comment in comments %}
-        <h3>{{ comment.username }}</h3>
-        {{ comment.comment }}<br>
+        <div class="comment-header">
+            <h3>{{ comment.username }}</h3>
+            <span class="comment-date-time">{{ comment.creation_date }} at {{ comment.creation_time }}</span>
+        </div>
+        <p>{{ comment.content }}</p>
+        {% if comment.user_id == current_user %}
+        <form class="comment-form" action="/delete-comment/{{ comment.id }}" method="post">
+            <button type="submit">Delete</button>
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+        {% endif %}
         <hr> 
         {% endfor %}
         <h2>Sends</h2>

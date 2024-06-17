@@ -1,6 +1,6 @@
 from app import app
-import climbs, crags, users
-from flask import redirect, render_template, abort, flash, request, session
+import climbs, crags, users, comments
+from flask import redirect, render_template, abort, flash, request, session, url_for
 
 
 @app.route("/index", methods=["GET", "POST"]) # landing/login page
@@ -39,14 +39,11 @@ def register():
         if not users.is_valid_password(password1):
             flash("Password must be at least 8 characters long and contain at least one number", "error")
             return redirect("/register")
-        
         if password1 != password2:
             flash("The passwords do not match.", "error")
             return redirect("/register")
-        
         if users.register_user(username, email, password1):
             return redirect("/home")
-        
         return render_template("error.html", message="Registration was unsuccessful. (Possible reasons: username already taken, email already has an account, or other error.) Please try a again.")
 
 
@@ -60,7 +57,6 @@ def logout():
 def home():
     if not users.user_id(): # if user is not logged in, take to login page
         return redirect("/")
-    
     username = session.get("username")
     is_admin = users.is_admin()
 
@@ -160,16 +156,41 @@ def climbs_page():
         return render_template("climbs.html", climbs_list=all_climbs)
 
 
-@app.route("/climbs/<int:id>")
+@app.route("/climbs/<int:id>", methods=["GET", "POST"]) 
 def climb_detail(id):
-    if not users.user_id():
-        return redirect("/")
+    if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
+        
+        current_user = users.user_id()
+        climb_details = climbs.get_climb(id)
+        all_comments = comments.get_comments_for_climb_id(id) # all comments of that climb
+        sends = climbs.get_sends_for_climb_id(id) # all sends by users of that climb
+        send_count = len(sends) # total number of sends for the climb
+        return render_template("climb_detail.html", current_user=current_user, climb_details=climb_details, comments=all_comments, sends=sends, send_count=send_count)
 
-    climb_details = climbs.get_climb(id)
-    comments = climbs.get_comments_for_climb_id(id) # all comments of that climb
-    sends = climbs.get_sends_for_climb_id(id) # all sends by users of that climb
-    send_count = len(sends) # total number of sends for the climb
-    return render_template("climb_detail.html", climb_details=climb_details, comments=comments, sends=sends, send_count=send_count)
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        user_id = users.user_id()
+
+        content = request.form["content"]
+        if comments.add_comment(user_id=user_id, climb_id=id, content=content):
+            return redirect(request.url)
+        return render_template("error.html", message="Something went wrong with adding the comment :( Please try a again.")
+
+
+@app.route("/delete-comment/<int:comment_id>", methods=["POST"])
+def delete_comment(comment_id):
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        comment = comments.get_comment_for_comment_id(comment_id)
+        if comment and comment.user_id == users.user_id(): 
+            if comments.delete_comment_using_id(comment_id):
+                return redirect(url_for("climb_detail", id=comment.climb_id))
+            return render_template("error.html", message="Something went wrong with deleting the comment :( Please try a again.")
 
 
 @app.route("/add-climb", methods=["GET", "POST"]) 
@@ -260,18 +281,18 @@ def profile():
 
         if not users.is_valid_password(password1):
             flash("Password must be at least 8 characters long and contain at least one number", "error")
-            return redirect("/profile")
+            return redirect(request.url)
         
         if password1 != password2:
             flash("The passwords do not match", "error")
-            return redirect("/profile")
+            return redirect(request.url)
         
         if not users.validate_password(user_id, old_password):
             flash("Incorrect password", "error")
-            return redirect("/profile")
+            return redirect(request.url)
 
         if users.change_password(user_id, password1):
             flash("Password successfully changed", "success")
-            return redirect("/profile")
+            return redirect(request.url)
         
         return render_template("error.html", message="The operation was unsuccessful. Please try a again.")

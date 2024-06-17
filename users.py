@@ -66,7 +66,12 @@ def user_id():
 
 
 def get_user_info(user_id):
-    sql = "SELECT id, username, email, DATE(created_at) AS creation_date FROM users WHERE id=:user_id"
+    sql = """
+    SELECT id, username, email, 
+    DATE(created_at) AS creation_date, 
+    TO_CHAR(created_at, 'HH24:MI') AS creation_time 
+    FROM users 
+    WHERE id=:user_id"""
     result = db.session.execute(text(sql), {"user_id":user_id})
     user_info = result.fetchone()
     return user_info
