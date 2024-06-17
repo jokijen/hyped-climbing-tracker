@@ -15,7 +15,7 @@
         <h2>{{ user_info.username }}</h2>
         <p>
             Email: <b>{{ user_info.email}}</b><br>
-            Joined: <b>{{ user_info.creation_date }}</b>
+            Joined: <b>{{ user_info.creation_date }} at {{ user_info.creation_time}}</b>
         </p>
         <h3>Change your password</h3>
         {% with messages = get_flashed_messages(with_categories=true) %} 
