@@ -83,6 +83,19 @@ form input[type="submit"] {
 button[type="submit"]:hover,
 form input[type="submit"]:hover {
     background: #2812bb;
+    color: #fff;
+}
+
+button.delete, 
+form input.delete[type="submit"] {
+    background: darkred;
+    color: #fff;
+}
+
+button.delete:hover,
+form input.delete[type="submit"]:hover {
+
+    background: crimson;
 }
 
 .container {
