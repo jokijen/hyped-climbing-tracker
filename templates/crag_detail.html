@@ -23,6 +23,19 @@
         Latitude: <b>{{ crag_details.latitude }}</b><br>
         Longitude: <b>{{ crag_details.longitude }}</b><br>
         Managed by: <b>{{ crag_details.manager }}</b><br>
+        <form class="favourite-form" action="/add-to-favourites/{{ crag_details.id }}" method="post">
+            <button type="submit" class="add-favourite">Add to favourites</button>
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+        {% if messages %} 
+        <ul> 
+            {% for category, message in messages %} 
+            <li class="{{ category }}">{{ message }}</li> 
+            {% endfor %} 
+        </ul> 
+        {% endif %} 
+        {% endwith %}
         <hr> 
         <h2>Climbs at the crag</h2>
         <hr> 

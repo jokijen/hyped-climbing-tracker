@@ -188,10 +188,26 @@ def delete_comment(comment_id):
             abort(403)
         
         comment = comments.get_comment_for_comment_id(comment_id)
-        if comment and (comment.user_id == users.user_id() or users.is_admin()): 
+        if comment and (comment.user_id == users.user_id() or users.is_admin()): # Checks if the user is the same that wrote the comment or an admin, in which case they can delete the message
             if comments.delete_comment_using_id(comment_id):
                 return redirect(url_for("climb_detail", id=comment.climb_id))
             return render_template("error.html", message="Something went wrong with deleting the comment :( Please try a again.")
+
+
+@app.route("/add-to-favourites/<int:crag_id>", methods=["POST"])
+def add_to_favourites(crag_id):
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        user_id = users.user_id()
+        if favourites.is_in_favourites(user_id, crag_id): # Flash message if the crag is already in favourites
+            flash("The crag is already in favourites", "error")
+            return redirect(url_for("crag_detail", id=crag_id))
+        else:
+            if favourites.add_crag_to_favourites(user_id, crag_id): # Add crag to favourite crags
+                return redirect("/favourites")
+            return render_template("error.html", message="Something went wrong with adding the crag to favourites :( Please try a again.")
 
 
 @app.route("/add-climb", methods=["GET", "POST"]) 
