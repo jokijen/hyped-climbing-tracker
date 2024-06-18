@@ -17,18 +17,6 @@ def get_crag(id):
     return crag_info
 
 
-def get_favourites(user_id):
-    sql = """
-    SELECT c.id, c.crag_name, c.latitude, c.longitude, c.crag_description, c.manager
-    FROM crags c , favourite_crags f
-    WHERE f.crag_id=c.id
-    AND f.user_id=:user_id
-    ORDER BY c.crag_name"""
-    reusult = db.session.execute(text(sql), {"user_id":user_id})
-    favourites = reusult.fetchall()
-    return favourites
-
-
 def get_random_crag():
     sql = "SELECT id FROM crags"
     result = db.session.execute(text(sql))
@@ -37,19 +25,15 @@ def get_random_crag():
 
 
 def add_new_crag(name, latitude, longitude, description, manager, created_by): 
-    sql = """
-    INSERT INTO crags (crag_name, latitude, longitude, crag_description, manager, created_by)
-    VALUES (:name, :latitude, :longitude, :description, :manager, :created_by)"""
-    db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "manager":manager, "created_by":created_by})
-    db.session.commit()
+    try:
+        sql = """
+        INSERT INTO crags (crag_name, latitude, longitude, crag_description, manager, created_by)
+        VALUES (:name, :latitude, :longitude, :description, :manager, :created_by)"""
+        db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "manager":manager, "created_by":created_by})
+        db.session.commit()
+    except: 
+        return False
     return True
-
-
-def add_crag_to_favourites(user_id, crag_id): # not finished/tested
-    sql = """
-    INSERT INTO favourite_crags (user_id, crag_id)
-    VALUES (:user_id, :crag_id)"""
-    db.session.execute(text(sql), {"user_id":user_id, "crag_id":crag_id})
 
 
 def search_crags(query): # search shows more relevant results first

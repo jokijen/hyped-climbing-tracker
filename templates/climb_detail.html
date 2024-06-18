@@ -37,9 +37,10 @@
             <span class="comment-date-time">{{ comment.creation_date }} at {{ comment.creation_time }}</span>
         </div>
         <p>{{ comment.content }}</p>
-        {% if comment.user_id == current_user %}
+        <!-- Delete your own comment -->
+        {% if comment.user_id == current_user or admin %}
         <form class="comment-form" action="/delete-comment/{{ comment.id }}" method="post">
-            <button type="submit">Delete</button>
+            <button type="submit" class="delete">Delete</button>
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         {% endif %}

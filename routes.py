@@ -1,5 +1,5 @@
 from app import app
-import climbs, crags, users, comments
+import climbs, crags, users, comments, ticklist, favourites, logged_sends
 from flask import redirect, render_template, abort, flash, request, session, url_for
 
 
@@ -64,29 +64,29 @@ def home():
 
 
 @app.route("/favourites")
-def favourites():
+def favourites_page():
     if not users.user_id():
         return redirect("/")
     user_id = users.user_id()
-    favourites = crags.get_favourites(user_id)
-    return render_template("favourites.html", favourites=favourites)
+    favourite_crags = favourites.get_favourites(user_id)
+    return render_template("favourites.html", favourite_crags=favourite_crags)
 
 
 @app.route("/ticklist")
-def ticklist():
+def ticklist_page():
     if not users.user_id():
         return redirect("/")
     user_id = users.user_id()
-    tick_list = climbs.get_ticklist(user_id)
+    tick_list = ticklist.get_ticklist(user_id)
     return render_template("ticklist.html", tick_list=tick_list)
 
 
 @app.route("/logged-sends")
-def logged_sends():
+def logged_sends_page():
     if not users.user_id():
         return redirect("/")
     user_id = users.user_id()
-    sends = climbs.get_sends_for_user(user_id)
+    sends = logged_sends.get_sends_for_user(user_id)
     return render_template("logged_sends.html", sends=sends)
 
 
@@ -163,11 +163,12 @@ def climb_detail(id):
             return redirect("/")
         
         current_user = users.user_id()
+        is_admin = users.is_admin()
         climb_details = climbs.get_climb(id)
         all_comments = comments.get_comments_for_climb_id(id) # all comments of that climb
-        sends = climbs.get_sends_for_climb_id(id) # all sends by users of that climb
+        sends = logged_sends.get_sends_for_climb_id(id) # all sends by users of that climb
         send_count = len(sends) # total number of sends for the climb
-        return render_template("climb_detail.html", current_user=current_user, climb_details=climb_details, comments=all_comments, sends=sends, send_count=send_count)
+        return render_template("climb_detail.html", current_user=current_user, admin=is_admin, climb_details=climb_details, comments=all_comments, sends=sends, send_count=send_count)
 
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
@@ -187,7 +188,7 @@ def delete_comment(comment_id):
             abort(403)
         
         comment = comments.get_comment_for_comment_id(comment_id)
-        if comment and comment.user_id == users.user_id(): 
+        if comment and (comment.user_id == users.user_id() or users.is_admin()): 
             if comments.delete_comment_using_id(comment_id):
                 return redirect(url_for("climb_detail", id=comment.climb_id))
             return render_template("error.html", message="Something went wrong with deleting the comment :( Please try a again.")
@@ -240,9 +241,10 @@ def log_send(id):
         review = request.form["review"]
         rating = request.form["rating"]
 
-        if climbs.add_send(user_id, climb_id, send_date, send_type, review, rating):
+        if logged_sends.add_send(user_id, climb_id, send_date, send_type, review, rating):
+            if ticklist.is_on_ticklist(user_id, climb_id):
+                ticklist.delete_from_ticklist(user_id, climb_id) 
             return redirect("/logged-sends")
-        
         else:
             return render_template("error.html", message="Something went wrong with logging the send :( Please try a again.")
 
