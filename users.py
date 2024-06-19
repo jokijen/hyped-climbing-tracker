@@ -37,7 +37,7 @@ def user_login(username, password):
     return False
 
 
-def validate_password(user_id, password): # validate password for changing the password
+def validate_password(user_id, password): # validate old password for changing the password
     sql = "SELECT password FROM users WHERE id=:user_id"
     result = db.session.execute(text(sql), {"user_id":user_id})
     old_pass = result.fetchone()
@@ -85,8 +85,6 @@ def is_suspended(username):
     sql = "SELECT suspended FROM users WHERE username=:username"
     result = db.session.execute(text(sql), {"username":username})
     user = result.fetchone()
-    print(user)
     if user[0]: 
-        print(user[0])
         return True
     return False

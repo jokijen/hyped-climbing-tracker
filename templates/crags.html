@@ -7,9 +7,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <header>
+    <div class="sidebar">
         <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
-    </header>
+        <nav>
+            <ul>
+                <li><a href="/favourites">Favourite crags</a></li>
+                <li><a href="/ticklist">Tick-list</a></li>
+                <li><a href="/logged-sends">Logged sends</a></li>
+            </ul>
+            <br>
+            <ul>
+                <li><a href="/crags">Browse all crags</a></li>
+                <li><a href="/climbs">Browse all climbs</a></li>
+                <li><a href="/random">Random crag &amp; climb</a></li>
+            </ul>
+            <br>
+            {% if admin %}
+            <ul>
+                <li><a href="/add-crag">Add crag</a></li>
+                <li><a href="/add-climb">Add climb</a></li>
+            </ul>
+            <br>
+            {% endif %}
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
     <div class="container">
         <h1>All crags</h1> 
         <h2 class="hidden">All crags</h2> <!-- Hidden heading to not skip a heading tag -->
@@ -24,7 +49,9 @@
         Latitude: <b>{{ crag.latitude }}</b> <br>
         Longitude: <b>{{ crag.longitude }}</b> <br>
         Managed by: <b>{{ crag.manager }}</b> <br>
-        <a href="/crags/{{ crag.id }}">Go to crag</a>
+        <form action="/crags/{{ crag.id }}" method="get">
+            <button type="submit">Go to crag</button>
+        </form>
         <hr> 
         {% endfor %}
     </div>

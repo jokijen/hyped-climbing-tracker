@@ -26,8 +26,19 @@ def is_on_ticklist(user_id, climb_id):
     )"""
     result = db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
     exists = result.fetchone()[0]
-    print(exists)
     return exists
+
+
+def add_climb_to_ticklist(user_id, climb_id): # Adds a crag to the user's favourite_crags
+    try:
+        sql = """
+        INSERT INTO ticklist (user_id, climb_id)
+        VALUES (:user_id, :climb_id)"""
+        db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
+        db.session.commit()
+    except: 
+        return False
+    return True
 
 
 def delete_from_ticklist(user_id, climb_id):

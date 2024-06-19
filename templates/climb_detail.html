@@ -7,9 +7,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <header>
+    <div class="sidebar">
         <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
-    </header>
+        <nav>
+            <ul>
+                <li><a href="/favourites">Favourite crags</a></li>
+                <li><a href="/ticklist">Tick-list</a></li>
+                <li><a href="/logged-sends">Logged sends</a></li>
+            </ul>
+            <br>
+            <ul>
+                <li><a href="/crags">Browse all crags</a></li>
+                <li><a href="/climbs">Browse all climbs</a></li>
+                <li><a href="/random">Random crag &amp; climb</a></li>
+            </ul>
+            <br>
+            {% if admin %}
+            <ul>
+                <li><a href="/add-crag">Add crag</a></li>
+                <li><a href="/add-climb">Add climb</a></li>
+            </ul>
+            <br>
+            {% endif %}
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
     <div class="container">
         <h1>{{ climb_details.climb_name }}, {{ climb_details.difficulty }}</h1> 
         <p>
@@ -20,7 +45,25 @@
         Type: <b>{{ climb_details.climb_type }}</b><br>
         Logged sends: <b>{{ send_count }}</b><br>
         First ascent: <b>{{ climb_details.first_ascent }}</b><br>
-        <a href="/log-send/{{ climb_details.id }}">Log as sent</a>
+
+        <div class="button-container">
+            <form class="form-add-to" action="/add-to-ticklist/{{ climb_details.id }}" method="post">
+                <button type="submit" class="btn-add-to">Add to tick-list</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+            <form action="/log-send/{{ climb_details.id }}" method="get">
+                <button type="submit" class="btn-mark-sent">Log as sent</button>
+            </form>
+        </div>
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+        {% if messages %} 
+        <ul> 
+            {% for category, message in messages %} 
+            <li class="{{ category }}">{{ message }}</li> 
+            {% endfor %} 
+        </ul> 
+        {% endif %} 
+        {% endwith %}
         <hr> 
         <h2>Comments</h2>
         <hr>
@@ -40,7 +83,7 @@
         <!-- Delete your own comment -->
         {% if comment.user_id == current_user or admin %}
         <form class="comment-form" action="/delete-comment/{{ comment.id }}" method="post">
-            <button type="submit" class="delete">Delete</button>
+            <button type="submit" class="btn-delete">Delete</button>
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         {% endif %}

@@ -7,9 +7,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <header>
+    <div class="sidebar">
         <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
-    </header>
+        <nav>
+            <ul>
+                <li><a href="/favourites">Favourite crags</a></li>
+                <li><a href="/ticklist">Tick-list</a></li>
+                <li><a href="/logged-sends">Logged sends</a></li>
+            </ul>
+            <br>
+            <ul>
+                <li><a href="/crags">Browse all crags</a></li>
+                <li><a href="/climbs">Browse all climbs</a></li>
+                <li><a href="/random">Random crag &amp; climb</a></li>
+            </ul>
+            <br>
+            {% if admin %}
+            <ul>
+                <li><a href="/add-crag">Add crag</a></li>
+                <li><a href="/add-climb">Add climb</a></li>
+            </ul>
+            <br>
+            {% endif %}
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
     <div class="container">
         <h1>Profile</h1>
         <h2>{{ user_info.username }}</h2>
@@ -17,6 +42,7 @@
             Email: <b>{{ user_info.email}}</b><br>
             Joined: <b>{{ user_info.creation_date }} at {{ user_info.creation_time}}</b>
         </p>
+        <hr>
         <h3>Change your password</h3>
         {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
