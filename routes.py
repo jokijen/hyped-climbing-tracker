@@ -1,5 +1,5 @@
 from app import app
-import climbs, crags, users, comments, ticklist, favourites, logged_sends
+import climbs, crags, users, comments, ticklist, favourites, sends
 from flask import redirect, render_template, abort, flash, request, session, url_for
 
 
@@ -60,7 +60,8 @@ def home():
     
     username = session.get("username")
     is_admin = users.is_admin()
-    return render_template("home.html", username=username, admin=is_admin)
+    latest_sends = sends.get_latest_sends()
+    return render_template("home.html", username=username, admin=is_admin, latest_sends=latest_sends)
 
 
 @app.route("/favourites")
@@ -91,10 +92,10 @@ def logged_sends_page():
         return redirect("/")
     
     user_id = users.user_id()
-    sends = logged_sends.get_sends_for_user(user_id)
+    logged_sends = sends.get_sends_for_user(user_id)
     is_admin = users.is_admin()
 
-    return render_template("logged_sends.html", sends=sends, admin=is_admin)
+    return render_template("logged_sends.html", sends=logged_sends, admin=is_admin)
 
 
 @app.route("/search", methods=["GET"])
@@ -181,9 +182,13 @@ def climb_detail(id):
         is_admin = users.is_admin()
         climb_details = climbs.get_climb(id)
         all_comments = comments.get_comments_for_climb_id(id) # all comments of that climb
-        sends = logged_sends.get_sends_for_climb_id(id) # all sends by users of that climb
-        send_count = len(sends) # total number of sends for the climb
-        return render_template("climb_detail.html", current_user=current_user, admin=is_admin, climb_details=climb_details, comments=all_comments, sends=sends, send_count=send_count)
+        logged_sends = sends.get_sends_for_climb_id(id) # all sends by users of that climb
+        send_count = len(logged_sends) # total number of sends for the climb
+        tick_count = ticklist.times_on_ticklist(id)
+        tick_date = ticklist.date_ticked(current_user, id)
+        send_date = sends.date_sent(current_user, id)
+        avg_rating = sends.average_rating(id)
+        return render_template("climb_detail.html", current_user=current_user, admin=is_admin, climb_details=climb_details, comments=all_comments, sends=logged_sends, send_count=send_count, tick_count=tick_count, tick_date=tick_date, send_date=send_date, avg_rating=avg_rating)
 
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
@@ -234,10 +239,6 @@ def add_to_ticklist(climb_id):
         
         user_id = users.user_id()
 
-        if climbs.is_sent(user_id, climb_id):
-            flash("You already sent this climb", "error")
-            return redirect(url_for("climb_detail", id=climb_id))
-
         if ticklist.is_on_ticklist(user_id, climb_id): # Flash message if the climb is already on tick-list
             flash("The climb is already on your tick-list", "error")
             return redirect(url_for("climb_detail", id=climb_id))
@@ -283,6 +284,11 @@ def log_send(id):
         if not users.user_id():
             return redirect("/")
         
+        user_id = users.user_id()
+        if sends.is_sent(user_id, id):
+            flash("You already sent this climb", "error")
+            return redirect(url_for("climb_detail", id=id))
+        
         climb_details = climbs.get_climb(id)
         is_admin = users.is_admin()
         return render_template("log_send.html", climb_details=climb_details, admin=is_admin)
@@ -298,7 +304,7 @@ def log_send(id):
         review = request.form["review"]
         rating = request.form["rating"]
 
-        if logged_sends.add_send(user_id, climb_id, send_date, send_type, review, rating):
+        if sends.add_send(user_id, climb_id, send_date, send_type, review, rating):
             if ticklist.is_on_ticklist(user_id, climb_id):
                 ticklist.delete_from_ticklist(user_id, climb_id) 
             return redirect("/logged-sends")
@@ -317,6 +323,15 @@ def random():
     climb_details = climbs.get_climb(random_climb_id)
     is_admin = users.is_admin()
     return render_template("random.html", crag_details=crag_details, climb_details=climb_details, admin=is_admin)
+
+
+@app.route("/thesaurus")
+def thesaurus():
+    if not users.user_id():
+        return redirect("/")
+
+    is_admin = users.is_admin()
+    return render_template("thesaurus.html", admin=is_admin)
 
 
 @app.route("/profile", methods=["GET", "POST"])
@@ -356,3 +371,4 @@ def profile():
             return redirect(request.url)
         
         return render_template("error.html", message="The operation was unsuccessful. Please try a again.")
+

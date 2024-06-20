@@ -127,6 +127,10 @@ button.btn-go-to[type="submit"] {
     cursor: pointer;
 }
 
+button.btn-go-to[type="submit"] {
+    margin-top: 5px;
+}
+
 button[type="submit"]:hover,
 form input[type="submit"]:hover, 
 button.btn-go-to[type="submit"]:hover {
@@ -136,6 +140,7 @@ button.btn-go-to[type="submit"]:hover {
 
 button.btn-add-to[type="submit"] {
     background: rgb(105, 11, 127);
+    margin-top: 0;
 }
 
 button.btn-add-to[type="submit"]:hover {
@@ -144,6 +149,7 @@ button.btn-add-to[type="submit"]:hover {
 
 button.btn-mark-sent[type="submit"] {
     background: rgb(222, 79, 18);
+    margin-top: 0;
 }
 
 button.btn-mark-sent[type="submit"]:hover {
@@ -153,6 +159,7 @@ button.btn-mark-sent[type="submit"]:hover {
 button.btn-delete, 
 form input.delete[type="submit"] {
     background: rgb(152, 0, 0);
+    margin-top: 0;
 }
 
 button.btn-delete:hover,
@@ -211,5 +218,14 @@ form input.delete[type="submit"]:hover {
 
 .comment-date-time {
     font-size: 0.8em;
+    color: #333333;
+}
+
+.term {
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.understated-link {
     color: #333333;
 }

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crags | Hyped - Log your sends and discover new projects</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="sidebar">
+        <a href="/home"><img src="/static/Hyped_logo_w265x155.png" alt="Hyped Logo" class="logo"></a>
+        <nav>
+            <ul>
+                <li><a href="/favourites">Favourite crags</a></li>
+                <li><a href="/ticklist">Tick-list</a></li>
+                <li><a href="/logged-sends">Logged sends</a></li>
+            </ul>
+            <br>
+            <ul>
+                <li><a href="/crags">Browse all crags</a></li>
+                <li><a href="/climbs">Browse all climbs</a></li>
+                <li><a href="/random">Random crag &amp; climb</a></li>
+            </ul>
+            <br>
+            {% if admin %}
+            <ul>
+                <li><a href="/add-crag">Add crag</a></li>
+                <li><a href="/add-climb">Add climb</a></li>
+            </ul>
+            <br>
+            {% endif %}
+            <ul>
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/thesaurus">Thesaurus</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+    <div class="container">
+    <h1>Climbing Glossary</h1>
+
+        <p><span class="term">Anchor:</span> A point of attachment for a climber's rope, typically consisting of bolts, trees, or other natural features.</p>
+        <p><span class="term">Barn door:</span> A term for when the climber's body swings uncontrollably away from the rock, often due to all points of contact being in line with each other.</p>
+        <p><span class="term">Belay:</span> The technique of managing the rope for a climber, providing security and arresting falls.</p>
+        <p><span class="term">Belayer:</span> The person who manages the rope and provides a belay for the climber.</p>
+        <p><span class="term">Belaying device:</span> A mechanical device used to control the rope while belaying, such as an ATC or GriGri.</p>
+        <p><span class="term">Beta:</span> Information or advice about how to complete a climb or a specific move.</p>
+        <p><span class="term">Bouldering:</span> Climbing short, challenging routes called "problems" without ropes, but with a crashpad for protection.</p>
+        <p><span class="term">Cams:</span> Spring-loaded devices placed in cracks to protect climbers, used in trad climbing.</p>
+        <p><span class="term">Carabiner:</span> A metal loop with a spring-loaded gate used to connect climbing gear, ropes, and harnesses.</p>
+        <p><span class="term">Chalk:</span> Powder used by climbers to keep their hands dry for better grip.</p>
+        <p><span class="term">Chimney:</span> A wide crack that is climbed by placing the body inside and using opposite pressure from the feet and back.</p>
+        <p><span class="term">Clipstick:</span> An extendable stick with a mechanism for clipping a quickdraw and rope to a distant bolt.</p>
+        <p><span class="term">Clipping:</span> The act of attaching the rope to a piece of protection (e.g. a quickdraw) to secure yourself on the climb.</p>
+        <p><span class="term">Crag:</span> A cliff or group of cliffs that are suitable for climbing.</p>
+        <p><span class="term">Crashpad:</span> A thick, portable foam pad used to cushion falls in bouldering.</p>
+        <p><span class="term">Crimp:</span> A small hold/edge that you grip with your fingertips, often with bent fingers.</p>
+        <p><span class="term">Crux:</span> The hardest move or sequence of moves on a climb.</p>
+        <p><span class="term">Dyno:</span> A dynamic move where you jump or lunge to reach the next hold.</p>
+        <p><span class="term">DWS (Deep water soloing):</span> Climbing over water without ropes, relying on the water to catch you if you fall.</p>
+        <p><span class="term">Edging:</span> Using the edge of the climbing shoe to stand on small footholds.</p>
+        <p><span class="term">FA / First ascent:</span> The first ascent of a route/problem.</p>
+        <p><span class="term">Flagging:</span> A technique where one leg is extended out to the side to improve balance.</p>
+        <p><span class="term">Flash:</span> Climbing a route on the first try but with some prior knowledge or advice about the route.</p>
+        <p><span class="term">Grading:</span> An alphanumeric system used to indicate the difficulty of a problem/route (see Font).</p>
+        <p><span class="term">Gaston:</span> A move where you push outward against a hold with your elbow pointing away from your body.</p>
+        <p><span class="term">Font (Fontainebleau) grading:</span> A grading system named after Fontainebleau in France (e.g. bouldering 4, 6B, 7C+; sport/trad 4, 6b, 7c+).</p>
+        <p><span class="term">Hand jam:</span> A technique where the hand is wedged into a crack to provide a secure hold.</p>
+        <p><span class="term">Heel hook:</span> Using the heel to hook onto a hold to provide stability or to pull up.</p>
+        <p><span class="term">Helmet:</span> Always, ALWAYS, wear one on a sport/trad route! Protective headgear worn to prevent injuries from falls or rockfall.</p>
+        <p><span class="term">Hype:</span> Excitement and anticipation among climbers, often surrounding new crags, climbs, or events.</p>
+        <p><span class="term">Jug:</span> A large, easy-to-grip hold, often very secure and comfortable.</p>
+        <p><span class="term">Layback:</span> A climbing technique where you pull on a vertical edge with your hands while pushing with your feet.</p>
+        <p><span class="term">Leader:</span> A person who climbs first without a rope running through an anchor point above, clipping into attachment points as they progress.</p>
+        <p><span class="term">Lock off:</span> Holding a position with one arm while reaching for the next hold with the other.</p>
+        <p><span class="term">Mantle:</span> A move where the climber pushes down on a hold to bring their body up and over.</p>
+        <p><span class="term">Onsight:</span> Climbing a route on the first try without any prior knowledge or advice about the route.</p>
+        <p><span class="term">Overhang:</span> A section of the climb that leans past vertical, making it more physically demanding.</p>
+        <p><span class="term">Pinch:</span> A type of hold that is gripped by pinching between the thumb and fingers.</p>
+        <p><span class="term">Pitch:</span> A section of a climb between two belay points.</p>
+        <p><span class="term">Problem:</span> A boulder route (see "bouldering)."</p>
+        <p><span class="term">Pumped:</span> When your forearms are so fatigued and filled with lactic acid that they can hardly grip the holds.</p>
+        <p><span class="term">Quickdraw:</span> A piece of climbing gear used to connect the rope to bolts or other protection, consisting of two carabiners connected by a sling.</p>
+        <p><span class="term">Redpoint:</span> Successfully climbing a route after having practiced or attempted it previously.</p>
+        <p><span class="term">Roof:</span> A completely horizontal overhang, often requiring complex and powerful moves.</p>
+        <p><span class="term">Send:</span> To successfully climb a route or problem. (For the purposes of this app, "send" is any send type that is not an onsight or a flash.)</p>
+        <p><span class="term">Slab:</span> A less-than-vertical face that relies more on balance and footwork than upper body strength.</p>
+        <p><span class="term">Sloper:</span> A hold that is smooth and rounded, relying on friction rather than edges.</p>
+        <p><span class="term">Sport climbing:</span> Climbing routes that are pre-equipped with fixed bolts and anchors for protection.</p>
+        <p><span class="term">Spotter:</span> A person who helps to protect a climber from the ground in bouldering by guiding their fall towards the crashpad.</p>
+        <p><span class="term">Tick-list:</span> A list of climbs a climber wants to complete.</p>
+        <p><span class="term">Topo:</span> A diagram or map of a climbing area or route showing the features, holds, and protection points.</p>
+        <p><span class="term">Trad climbing:</span> Traditional climbing where the climber places their own protective gear, like cams and nuts, into cracks and features in the rock.</p>
+    </div>
+</body>
+</html>

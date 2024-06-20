@@ -31,6 +31,7 @@
             {% endif %}
             <ul>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/thesaurus">Thesaurus</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -41,11 +42,21 @@
             <span>&#x2022;</span>
             {{ climb_details.climb_description }}
         </p>
-        Crag: <b>{{ climb_details.crag_name }}</b><br>
-        Type: <b>{{ climb_details.climb_type }}</b><br>
-        Logged sends: <b>{{ send_count }}</b><br>
-        First ascent: <b>{{ climb_details.first_ascent }}</b><br>
-
+        <hr> 
+        <h2>Climb information</h2> 
+        <hr> 
+        <p>
+            Crag: <b><a href="/crags/{{ climb_details.crag_id}}" class="understated-link">{{ climb_details.crag_name }}</a></b><br>
+            Type: <b>{{ climb_details.climb_type }}</b><br>
+            First ascent: <b>{{ climb_details.first_ascent }}</b><br>
+            <br>
+            Ticked by <b>{{ tick_count }}</b> users<br>
+            Sent by <b>{{ send_count }}</b> users<br>
+            Average rating: <b>{{ avg_rating }}</b><br>
+            <br>
+            Added to your ticklist: <b>{{ tick_date }}</b><br>
+            Your send date: <b>{{ send_date }}</b>
+        </p>
         <div class="button-container">
             <form class="form-add-to" action="/add-to-ticklist/{{ climb_details.id }}" method="post">
                 <button type="submit" class="btn-add-to">Add to tick-list</button>
@@ -79,7 +90,9 @@
             <h3>{{ comment.username }}</h3>
             <span class="comment-date-time">{{ comment.creation_date }} at {{ comment.creation_time }}</span>
         </div>
-        <p>{{ comment.content }}</p>
+        <p>
+            &quot{{ comment.content }}&quot
+        </p>
         <!-- Delete your own comment -->
         {% if comment.user_id == current_user or admin %}
         <form class="comment-form" action="/delete-comment/{{ comment.id }}" method="post">
@@ -93,10 +106,12 @@
         <hr> 
         {% for send in sends %}
         <h3>{{ send.username }}</h3>
-        Send date: <b>{{ send.send_date }}</b><br>
-        Send type: <b>{{ send.send_type }}</b><br>
-        Rating: <b>{{ send.rating }}</b><br>
-        Review: <b>{{ send.review }}</b><br>
+        <p>
+            Send date: <b>{{ send.send_date }}</b><br>
+            Send type: <b>{{ send.send_type }}</b><br>
+            Rating: <b>{{ send.rating }}</b><br>
+            Review: <b>{{ send.review }}</b><br>
+        </p>
         <hr> 
         {% endfor %}
     </div>

@@ -25,8 +25,24 @@ def is_on_ticklist(user_id, climb_id):
     AND climb_id=:climb_id
     )"""
     result = db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
-    exists = result.fetchone()[0]
-    return exists
+    exists = result.fetchone()
+    return exists[0]
+
+
+def date_ticked(user_id, climb_id): 
+    sql = "SELECT DATE(created_at) AS creation_date FROM ticklist WHERE user_id=:user_id AND climb_id=:climb_id"
+    result = db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
+    tick_date = result.fetchone()
+    if tick_date is None:
+        return "-"
+    return tick_date[0]
+
+
+def times_on_ticklist(climb_id):
+    sql = "SELECT COUNT(*) FROM ticklist WHERE climb_id=:climb_id"
+    result = db.session.execute(text(sql), {"climb_id":climb_id})
+    tick_count = result.fetchone()
+    return tick_count[0]
 
 
 def add_climb_to_ticklist(user_id, climb_id): # Adds a crag to the user's favourite_crags

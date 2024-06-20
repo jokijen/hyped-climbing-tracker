@@ -31,6 +31,7 @@
             {% endif %}
             <ul>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/thesaurus">Thesaurus</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -44,10 +45,13 @@
         <hr> 
         <h2>Crag information</h2> 
         <hr> 
-        Number of climbs: <b>{{ climb_count }}</b><br>
-        Latitude: <b>{{ crag_details.latitude }}</b><br>
-        Longitude: <b>{{ crag_details.longitude }}</b><br>
-        Managed by: <b>{{ crag_details.manager }}</b><br>
+        <p>
+            Number of climbs: <b>{{ climb_count }}</b><br>
+            <br>
+            Latitude: <b>{{ crag_details.latitude }}</b><br>
+            Longitude: <b>{{ crag_details.longitude }}</b><br>
+            Managed by: <b>{{ crag_details.manager }}</b><br>
+        </p>
         <form class="form-add-to" action="/add-to-favourites/{{ crag_details.id }}" method="post">
             <button type="submit" class="btn-add-to">Add to favourites</button>
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
@@ -68,11 +72,12 @@
         <h3> {{ climb.climb_name }}, {{ climb.difficulty }}</h3>
         <p>
             <span>&#x2022;</span>
-            {{ climb.climb_description }}
+            {{ climb.climb_description }}<br>
+            <br>
+            Type: <b>{{ climb.climb_type }}</b><br>
+            First ascent: <b>{{ climb.first_ascent }}</b>
         </p>
-        Type: <b>{{ climb.climb_type }}</b><br>
-        First ascent: <b>{{ climb.first_ascent }}</b><br>
-        <form action="/climbs/{{ climb.id }}" method="get">
+        <form action="/climbs/{{ climb.id }}" class="btn-go-to" method="get">
             <button type="submit">Go to climb</button>
         </form>
         <hr> 

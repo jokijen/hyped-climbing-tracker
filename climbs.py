@@ -55,19 +55,6 @@ def add_new_climb(name, difficulty, type, description, crag_id, first_ascent, cr
     return True
 
 
-def is_sent(user_id, climb_id):
-    sql = """
-    SELECT EXISTS (
-    SELECT 1
-    FROM sends 
-    WHERE user_id=:user_id
-    AND climb_id=:climb_id
-    )"""
-    result = db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
-    exists = result.fetchone()[0]
-    return exists
-
-
 def search_climbs(query): # search shows more relevant results first
     q = query.lower()
     sql = """

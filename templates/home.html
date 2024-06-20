@@ -31,6 +31,7 @@
             {% endif %}
             <ul>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/thesaurus">Thesaurus</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -42,8 +43,26 @@
             <input type="text" name="query" placeholder="Search for crags or routes">
             <button type="submit">Search</button>
         </form>
-        <p>Lorem ipsum dolor</p>
-        </nav>
+        <hr> 
+        <h2>Latest sends</h2>
+        <hr> 
+        <p>
+            {% for send in latest_sends %}
+        <h3>
+            {{ send.username }} - 
+            <a href="/climbs/{{ send.id }}" class="understated-link">{{ send.climb_name }}</a>, {{ send.difficulty }}
+            <a href="/crags/{{ send.crag_id}}" class="understated-link">({{ send.crag_name }})</a>
+        </h3>
+        <p>
+            Send date: <b>{{ send.send_date }}</b><br>
+            Send type: <b>{{ send.send_type }}</b><br>
+            Rating: <b>{{ send.rating }}</b><br>
+            Review: <b>{{ send.review }}</b><br>
+        </p>
+        <hr> 
+        {% endfor %}
+        
+        </p>
     </div>
 </body>
 </html>

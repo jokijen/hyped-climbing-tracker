@@ -31,6 +31,7 @@
             {% endif %}
             <ul>
                 <li><a href="/profile">Profile</a></li>
+                <li><a href="/thesaurus">Thesaurus</a></li>
                 <li><a href="/logout">Logout</a></li>
             </ul>
         </nav>
@@ -38,7 +39,7 @@
     <div class="container">
         <h1>Logged sends</h1> 
         <h2 class="hidden">Tick-list</h2> <!-- Hidden heading to not skip a heading tag -->
-        <p>Here are all your logged sends. You go crusher!</p>
+        <p>Here are all your logged sends from latest to oldest. You go crusher!</p>
         <hr>
         {% for climb in sends %}
         <h3> {{ climb.climb_name }}, {{ climb.difficulty }}</h3>
