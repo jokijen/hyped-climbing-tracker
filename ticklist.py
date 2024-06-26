@@ -23,6 +23,7 @@ def is_on_ticklist(user_id, climb_id):
     FROM ticklist 
     WHERE user_id=:user_id
     AND climb_id=:climb_id
+    AND deleted IS NOT TRUE
     )"""
     result = db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
     exists = result.fetchone()
@@ -30,7 +31,7 @@ def is_on_ticklist(user_id, climb_id):
 
 
 def date_ticked(user_id, climb_id): 
-    sql = "SELECT DATE(created_at) AS creation_date FROM ticklist WHERE user_id=:user_id AND climb_id=:climb_id"
+    sql = "SELECT DATE(created_at) AS creation_date FROM ticklist WHERE user_id=:user_id AND climb_id=:climb_id AND deleted IS NOT TRUE"
     result = db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
     tick_date = result.fetchone()
     if tick_date is None:
@@ -49,7 +50,9 @@ def add_climb_to_ticklist(user_id, climb_id): # Adds a crag to the user's favour
     try:
         sql = """
         INSERT INTO ticklist (user_id, climb_id)
-        VALUES (:user_id, :climb_id)"""
+        VALUES (:user_id, :climb_id)
+        ON CONFLICT (user_id, climb_id) DO UPDATE
+        SET deleted = FALSE, created_at = NOW()"""
         db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
         db.session.commit()
     except: 
@@ -59,7 +62,7 @@ def add_climb_to_ticklist(user_id, climb_id): # Adds a crag to the user's favour
 
 def delete_from_ticklist(user_id, climb_id):
     try: 
-        sql = "UPDATE ticklist SET deleted=TRUE WHERE user_id=:user_id AND climb_id=:climb_id"
+        sql = "UPDATE ticklist SET deleted = TRUE WHERE user_id=:user_id AND climb_id=:climb_id"
         db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id})
         db.session.commit()
     except:

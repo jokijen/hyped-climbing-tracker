@@ -70,7 +70,7 @@
             <textarea id="climb_description" name="climb_description" maxlength="1000" placeholder="e.g. Overhanging. Sit-start from the jug..." required></textarea>
             <label for="first_ascent">First ascent:</label>
             <input type="text" id="first_ascent" name="first_ascent" maxlength="50" placeholder="Name" required>
-            <input type="submit" value="Add climb">
+            <input type="submit" class="save" value="Add climb">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </div>

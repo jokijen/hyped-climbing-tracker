@@ -126,11 +126,14 @@ def crag_detail(id):
     if not users.user_id():
         return redirect("/")
 
+    user_id = users.user_id()
     crag_details = crags.get_crag(id)
     climbs_at_crag = climbs.get_climbs_by_crag_id(id) # all climbs at that crag
     climb_count = len(climbs_at_crag) # number of climbs at crag
+    fav_count = favourites.times_favourited(id)
+    is_favourite = favourites.is_in_favourites(user_id, id)
     is_admin = users.is_admin()
-    return render_template("crag_detail.html", id=id, crag_details=crag_details, climbs_at_crag=climbs_at_crag, climb_count=climb_count, admin=is_admin)
+    return render_template("crag_detail.html", id=id, crag_details=crag_details, climbs_at_crag=climbs_at_crag, climb_count=climb_count, fav_count=fav_count, is_favourite=is_favourite, admin=is_admin)
 
 
 @app.route("/add-crag", methods=["GET", "POST"])
@@ -178,17 +181,19 @@ def climb_detail(id):
         if not users.user_id():
             return redirect("/")
         
-        current_user = users.user_id()
+        user_id = users.user_id()
         is_admin = users.is_admin()
         climb_details = climbs.get_climb(id)
         all_comments = comments.get_comments_for_climb_id(id) # all comments of that climb
         logged_sends = sends.get_sends_for_climb_id(id) # all sends by users of that climb
         send_count = len(logged_sends) # total number of sends for the climb
         tick_count = ticklist.times_on_ticklist(id)
-        tick_date = ticklist.date_ticked(current_user, id)
-        send_date = sends.date_sent(current_user, id)
+        tick_date = ticklist.date_ticked(user_id, id)
+        send_date = sends.date_sent(user_id, id)
         avg_rating = sends.average_rating(id)
-        return render_template("climb_detail.html", current_user=current_user, admin=is_admin, climb_details=climb_details, comments=all_comments, sends=logged_sends, send_count=send_count, tick_count=tick_count, tick_date=tick_date, send_date=send_date, avg_rating=avg_rating)
+        on_ticklist = ticklist.is_on_ticklist(user_id, id)
+        is_climbed = sends.is_sent(user_id, id)
+        return render_template("climb_detail.html", current_user=user_id, admin=is_admin, climb_details=climb_details, comments=all_comments, sends=logged_sends, send_count=send_count, tick_count=tick_count, tick_date=tick_date, send_date=send_date, avg_rating=avg_rating, on_ticklist=on_ticklist, is_climbed=is_climbed)
 
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
@@ -227,8 +232,23 @@ def add_to_favourites(crag_id):
         
         else:
             if favourites.add_crag_to_favourites(user_id, crag_id): # Add crag to favourite crags
-                return redirect("/favourites")
+                return redirect(url_for("crag_detail", id=crag_id))
             return render_template("error.html", message="Something went wrong with adding the crag to favourites :( Please try a again.")
+
+
+@app.route("/remove-from-favourites/<int:crag_id>", methods=["POST"]) 
+def remove_from_favourites(crag_id):
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        user_id = users.user_id()
+        is_favourite = favourites.is_in_favourites(user_id, crag_id)
+
+        if is_favourite: 
+            if favourites.delete_from_favourites(user_id, crag_id):
+                return redirect(url_for("crag_detail", id=crag_id))
+            return render_template("error.html", message="Something went wrong with deleting the crag from favourites :( Please try a again.")
 
 
 @app.route("/add-to-ticklist/<int:climb_id>", methods=["POST"])
@@ -239,14 +259,32 @@ def add_to_ticklist(climb_id):
         
         user_id = users.user_id()
 
+        if sends.is_sent(user_id, climb_id): # Flash message if the user already sent the climb
+            flash("You already sent the climb, so you cannot add it to your tick-list", "error")
+            return redirect(url_for("climb_detail", id=climb_id))
         if ticklist.is_on_ticklist(user_id, climb_id): # Flash message if the climb is already on tick-list
             flash("The climb is already on your tick-list", "error")
             return redirect(url_for("climb_detail", id=climb_id))
-
         else:
             if ticklist.add_climb_to_ticklist(user_id, climb_id): # Add crag to favourite crags
-                return redirect("/ticklist")
+                return redirect(url_for("climb_detail", id=climb_id))
             return render_template("error.html", message="Something went wrong with adding the climb to your tick-list :( Please try a again.")
+
+
+@app.route("/remove-from-ticklist/<int:climb_id>", methods=["POST"]) 
+def remove_from_ticklist(climb_id):
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        user_id = users.user_id()
+        on_ticklist = ticklist.is_on_ticklist(user_id, climb_id)
+        is_sent = sends.is_sent(user_id, climb_id)
+
+        if on_ticklist and not is_sent: 
+            if ticklist.delete_from_ticklist(user_id, climb_id):
+                return redirect(url_for("climb_detail", id=climb_id))
+        return render_template("error.html", message="Something went wrong with removing the climb from your tick-list :( Please try a again.")
 
 
 @app.route("/add-climb", methods=["GET", "POST"]) 
@@ -278,18 +316,18 @@ def add_climb():
             return render_template("error.html", message="Something went wrong with adding the climb :( Please try a again.")
 
 
-@app.route("/log-send/<int:id>", methods=["GET", "POST"]) 
-def log_send(id):
+@app.route("/log-send/<int:climb_id>", methods=["GET", "POST"]) 
+def log_send(climb_id):
     if request.method == "GET":
         if not users.user_id():
             return redirect("/")
         
         user_id = users.user_id()
-        if sends.is_sent(user_id, id):
+        if sends.is_sent(user_id, climb_id):
             flash("You already sent this climb", "error")
-            return redirect(url_for("climb_detail", id=id))
+            return redirect(url_for("climb_detail", climb_id=climb_id))
         
-        climb_details = climbs.get_climb(id)
+        climb_details = climbs.get_climb(climb_id)
         is_admin = users.is_admin()
         return render_template("log_send.html", climb_details=climb_details, admin=is_admin)
     
@@ -298,7 +336,6 @@ def log_send(id):
             abort(403)
 
         user_id = users.user_id()
-        climb_id = id
         send_date = request.form["send_date"]
         send_type = request.form["send_type"]
         review = request.form["review"]
@@ -307,9 +344,55 @@ def log_send(id):
         if sends.add_send(user_id, climb_id, send_date, send_type, review, rating):
             if ticklist.is_on_ticklist(user_id, climb_id):
                 ticklist.delete_from_ticklist(user_id, climb_id) 
-            return redirect("/logged-sends")
+            return redirect(url_for("climb_detail", id=climb_id))
         else:
             return render_template("error.html", message="Something went wrong with logging the send :( Please try a again.")
+
+
+@app.route("/edit-send/<int:climb_id>", methods=["GET", "POST"]) 
+def edit_send(climb_id):
+    if request.method == "GET":
+        if not users.user_id():
+            return redirect("/")
+        
+        user_id = users.user_id()
+        climb_details = climbs.get_climb(climb_id)
+        send_details = sends.get_send_details(user_id, climb_id)
+        options = ["onsight", "flash", "send"]
+        is_admin = users.is_admin()
+        return render_template("edit_send.html", user_id=user_id, climb_details=climb_details, send_details=send_details, options=options, admin=is_admin)
+
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        user_id = users.user_id()
+        send_date = request.form["send_date"]
+        send_type = request.form["send_type"]
+        review = request.form["review"]
+        rating = request.form["rating"]
+
+        if sends.add_send(user_id, climb_id, send_date, send_type, review, rating):
+            if ticklist.is_on_ticklist(user_id, climb_id):
+                ticklist.delete_from_ticklist(user_id, climb_id) 
+            return redirect(url_for("climb_detail", id=climb_id))
+        else:
+            return render_template("error.html", message="Something went wrong with logging the send :( Please try a again.")
+
+
+@app.route("/delete-send/<int:climb_id>", methods=["POST"]) 
+def delete_from_sends(climb_id):
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+        
+        user_id = users.user_id()
+        is_sent = sends.is_sent(user_id, climb_id)
+
+        if is_sent: 
+            if sends.delete_send(user_id, climb_id):
+                return redirect(url_for("climb_detail", id=climb_id))
+        return render_template("error.html", message="Something went wrong with deleting the send :( Please try a again.")
 
 
 @app.route("/random")

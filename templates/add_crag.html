@@ -71,7 +71,7 @@
             <textarea id="crag_description" name="crag_description" maxlength="1000" placeholder="e.g. A north facing, mainly overhanging..." required></textarea>
             <label for="manager">Managed by:</label>
             <input type="text" id="manager" name="manager" maxlength="50" placeholder="Name, group, or organisation" required>
-            <input type="submit" value="Add crag">
+            <input type="submit" class="save" value="Add crag">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </div>

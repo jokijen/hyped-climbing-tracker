@@ -47,15 +47,24 @@
         <hr> 
         <p>
             Number of climbs: <b>{{ climb_count }}</b><br>
+            Marked favourite by <b>{{ fav_count}}</b> users<br>
             <br>
             Latitude: <b>{{ crag_details.latitude }}</b><br>
             Longitude: <b>{{ crag_details.longitude }}</b><br>
             Managed by: <b>{{ crag_details.manager }}</b><br>
         </p>
+        <!-- If crag in favourites, show "Remove from favourites", else show "Add to favourites" button -->
+        {% if is_favourite %}
+        <form class="form-remove-from" action="/remove-from-favourites/{{ crag_details.id }}" method="post">
+            <button type="submit" class="btn-delete">Remove from favourites</button>
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+        {% else %}
         <form class="form-add-to" action="/add-to-favourites/{{ crag_details.id }}" method="post">
             <button type="submit" class="btn-add-to">Add to favourites</button>
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
+        {% endif %}
         {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
         <ul> 

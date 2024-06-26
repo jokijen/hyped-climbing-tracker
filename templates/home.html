@@ -49,7 +49,7 @@
         <p>
             {% for send in latest_sends %}
         <h3>
-            {{ send.username }} - 
+            {{ send.username }}&ensp;&ndash;&nbsp;
             <a href="/climbs/{{ send.id }}" class="understated-link">{{ send.climb_name }}</a>, {{ send.difficulty }}
             <a href="/crags/{{ send.crag_id}}" class="understated-link">({{ send.crag_name }})</a>
         </h3>
@@ -57,7 +57,7 @@
             Send date: <b>{{ send.send_date }}</b><br>
             Send type: <b>{{ send.send_type }}</b><br>
             Rating: <b>{{ send.rating }}</b><br>
-            Review: <b>{{ send.review }}</b><br>
+            Review: "{{ send.review }}"<br>
         </p>
         <hr> 
         {% endfor %}

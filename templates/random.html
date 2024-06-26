@@ -39,6 +39,9 @@
     <div class="container">
         <h1>Random crag and climb</h1>
         <p>Already climbed your projects or just plain bored? Here you go!</p>
+        <form action="/random" method="get">
+            <button class="btn-edit" type="submit">Get new ones</button>
+        </form>
         <hr> 
         <h2>Crag</h2>
         <hr> 
@@ -47,7 +50,6 @@
             <span>&#x2022;</span>
             {{ crag_details.crag_description }}
         </p>
-        <h4>Crag information</h4> 
         Latitude: <b>{{ crag_details.latitude }}</b><br>
         Longitude: <b>{{ crag_details.longitude }}</b><br>
         Managed by: <b>{{ crag_details.manager }}</b><br>

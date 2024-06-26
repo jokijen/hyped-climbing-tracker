@@ -52,19 +52,39 @@
             <br>
             Ticked by <b>{{ tick_count }}</b> users<br>
             Sent by <b>{{ send_count }}</b> users<br>
-            Average rating: <b>{{ avg_rating }}</b><br>
+            Average rating (0&ndash;3): <b>{{ avg_rating }}</b><br>
             <br>
             Added to your ticklist: <b>{{ tick_date }}</b><br>
             Your send date: <b>{{ send_date }}</b>
         </p>
         <div class="button-container">
+            <!-- If climb on ticklist, show "Remove from tick-list", else show "Add to tick-list" button -->
+            {% if on_ticklist and not is_climbed %}
+            <form class="form-remove-from" action="/remove-from-ticklist/{{ climb_details.id }}" method="post">
+                <button type="submit" class="btn-delete">Remove from tick-list</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+            {% elif not on_ticklist and not is_climbed %}
             <form class="form-add-to" action="/add-to-ticklist/{{ climb_details.id }}" method="post">
                 <button type="submit" class="btn-add-to">Add to tick-list</button>
                 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
             </form>
+            {% endif %}
+            <!-- If climb on sent, show "Edit send" and "Delete send", else show "mark as sent" button -->
+            {% if not is_climbed %}
             <form action="/log-send/{{ climb_details.id }}" method="get">
                 <button type="submit" class="btn-mark-sent">Log as sent</button>
             </form>
+            {% else %}
+            <form class="form-edit" action="/edit-send/{{ climb_details.id }}" method="get">
+                <button type="submit" class="btn-edit">Edit send</button>
+            </form>
+            
+            <form class="form-delete" action="/delete-send/{{ climb_details.id }}" method="post">
+                <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete the send?')">Delete send</button>
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+            </form>
+            {% endif %}
         </div>
         {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
@@ -79,24 +99,24 @@
         <h2>Comments</h2>
         <hr>
         <!-- Add a new comment -->
-        <form class="comment-form" action="/climbs/{{ climb_details.id }}" method="post">
+        <form class="form-comment" action="/climbs/{{ climb_details.id }}" method="post">
             <textarea id="content" name="content" maxlength="1000" placeholder="Comment on the climb" required></textarea>
             <input type="submit" value="Post comment">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         <hr> 
         {% for comment in comments %}
-        <div class="comment-header">
+        <div class="header-comment">
             <h3>{{ comment.username }}</h3>
-            <span class="comment-date-time">{{ comment.creation_date }} at {{ comment.creation_time }}</span>
+            <span class="date-time-comment">{{ comment.creation_date }} at {{ comment.creation_time }}</span>
         </div>
         <p>
             &quot{{ comment.content }}&quot
         </p>
         <!-- Delete your own comment -->
         {% if comment.user_id == current_user or admin %}
-        <form class="comment-form" action="/delete-comment/{{ comment.id }}" method="post">
-            <button type="submit" class="btn-delete">Delete</button>
+        <form class="form-comment" action="/delete-comment/{{ comment.id }}" method="post">
+            <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete the comment?')">Delete</button>
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         {% endif %}
@@ -110,7 +130,7 @@
             Send date: <b>{{ send.send_date }}</b><br>
             Send type: <b>{{ send.send_type }}</b><br>
             Rating: <b>{{ send.rating }}</b><br>
-            Review: <b>{{ send.review }}</b><br>
+            Review: "{{ send.review }}"<br>
         </p>
         <hr> 
         {% endfor %}

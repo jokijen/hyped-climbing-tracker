@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log your send | Hyped - Log your sends and discover new projects</title>
+    <title>Edit your send | Hyped - Log your sends and discover new projects</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
@@ -37,24 +37,26 @@
         </nav>
     </div>
     <div class="container">
-        <h1>Log your send</h1>
+        <h1>Edit your send</h1>
         <h2>{{ climb_details.climb_name }}, {{ climb_details.difficulty }}</h2>
-        <p>Congrats! Fill in the following fields to log your send and give your opinion on the climb.</p>
-        <form action="/log-send/{{ climb_details.id }}" method="post">
+        <p>Adjust the following info to edit your send.</p>
+        <form action="/edit-send/{{ climb_details.id }}" method="post">
             <label for="send_date">Date:</label>
-            <input type="date" id="send_date" name="send_date" placeholder="2020-06-15" required>
+            <input type="date" id="send_date" name="send_date" value="{{ send_details.send_date }}" required>
             <label for="send_type">Send type:</label>
             <select id="send_type" name="send_type" required>
-                <option value="" disabled selected>Select type</option>
-                <option value="onsight">onsight</option>
-                <option value="flash">flash</option>
-                <option value="send">send</option>
+                <option value="{{ send_details.send_type }}" selected>{{ send_details.send_type }}</option>
+                {% for option in options %}
+                    {% if option != send_details.send_type %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endif %}
+                {% endfor %}
             </select>
             <label for="review">Review:</label>
-            <textarea id="review" name="review" maxlength="1000" placeholder="So, what did you think about the climb?"></textarea>
+            <textarea id="review" name="review" maxlength="1000">{{ send_details.review }}</textarea>
             <label for="rating">Rating 0-3:</label>
-            <input type="number" id="rating" name="rating" min="0" max="3" value="0">
-            <input type="submit" class="save" value="Mark as sent">
+            <input type="number" id="rating" name="rating" min="0" max="3" value="{{ send_details.rating }}">
+            <input type="submit" class="save" value="Save changes">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
     </div>

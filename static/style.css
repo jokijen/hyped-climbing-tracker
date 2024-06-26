@@ -76,7 +76,7 @@ h3 {
 }
 
 p {
-    margin-bottom: 1em;
+    margin-bottom: 10px;
 }
 
 form {
@@ -114,6 +114,11 @@ textarea {
     color: #333333;
 }
 
+textarea {
+    height: 150px;
+    margin-bottom: 10px;
+}
+
 button[type="submit"],
 form input[type="submit"], 
 button.btn-go-to[type="submit"] {
@@ -139,42 +144,53 @@ button.btn-go-to[type="submit"]:hover {
 }
 
 button.btn-add-to[type="submit"] {
-    background: rgb(105, 11, 127);
-    margin-top: 0;
+    background: rgb(127, 3, 155);
 }
 
 button.btn-add-to[type="submit"]:hover {
     background: rgb(75, 4, 91);
 }
 
-button.btn-mark-sent[type="submit"] {
+button.btn-mark-sent[type="submit"], 
+form input.save[type="submit"]{
+    background: rgb(2, 161, 26);
+}
+
+button.btn-mark-sent[type="submit"]:hover,
+form input.save[type="submit"]:hover {
+    background: rgb(1, 115, 18);
+}
+
+button.btn-edit[type="submit"] {
     background: rgb(222, 79, 18);
     margin-top: 0;
 }
 
-button.btn-mark-sent[type="submit"]:hover {
+button.btn-edit[type="submit"]:hover {
     background: rgb(181, 56, 3);
 }
 
 button.btn-delete, 
 form input.delete[type="submit"] {
-    background: rgb(152, 0, 0);
+    background: rgb(202, 0, 30);
     margin-top: 0;
 }
 
 button.btn-delete:hover,
 form input.delete[type="submit"]:hover {
-    background: rgb(114, 0, 0);
+    background: rgb(160, 6, 21);
 }
 
 .button-container {
     display: flex;
     gap: 10px;
+    margin-top: 0;
 }
 
 .button-container form{
     display: inline-block;
     margin: 0;
+    margin-top: 0;
 }
 
 .error {
@@ -194,13 +210,15 @@ form input.delete[type="submit"]:hover {
     display: none;
 }
 
-.comment-form,
-.add-to-form {
+.form-comment,
+.form-add-to,
+.form-edit 
+.form-remove-from {
     border: none;
     background: transparent;
 }
 
-.comment-form textarea {
+.form-comment textarea {
     width: 100%;
     height: 80px;
     padding: 10px; 
@@ -210,13 +228,13 @@ form input.delete[type="submit"]:hover {
     box-sizing: border-box;
 }
 
-.comment-header {
+.header-comment {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.comment-date-time {
+.date-time-comment {
     font-size: 0.8em;
     color: #333333;
 }
