@@ -163,7 +163,6 @@ form input.save[type="submit"]:hover {
 
 button.btn-edit[type="submit"] {
     background: rgb(222, 79, 18);
-    margin-top: 0;
 }
 
 button.btn-edit[type="submit"]:hover {
@@ -173,7 +172,6 @@ button.btn-edit[type="submit"]:hover {
 button.btn-delete, 
 form input.delete[type="submit"] {
     background: rgb(202, 0, 30);
-    margin-top: 0;
 }
 
 button.btn-delete:hover,

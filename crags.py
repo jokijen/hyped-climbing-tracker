@@ -1,42 +1,56 @@
-from db import db
-from sqlalchemy import text
+"""
+This module defines the functions related to handling crags
+for the Hyped app web application.
+"""
 import random
+from sqlalchemy import text
+from db import db
 
 
 def get_all_crags():
-    sql = "SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by FROM crags ORDER BY crag_name"
+    """Returns all crags and their info in alphabetical order of climb"""
+    sql = """
+    SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by
+    FROM crags ORDER BY crag_name"""
     result = db.session.execute(text(sql))
     all_crags = result.fetchall()
     return all_crags
 
 
-def get_crag(id):
-    sql = "SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by FROM crags WHERE id=:id"
-    result = db.session.execute(text(sql), {"id":id})
+def get_crag(crag_id):
+    """Returns information of a crag by the crag's id"""
+    sql = """
+    SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by
+    FROM crags WHERE id = :crag_id"""
+    result = db.session.execute(text(sql), {"crag_id":crag_id})
     crag_info = result.fetchone()
     return crag_info
 
 
 def get_random_crag():
+    """Returns a valid crag id from the database so that a random crag can be retrieved"""
     sql = "SELECT id FROM crags"
     result = db.session.execute(text(sql))
-    all_ids = [row[0] for row in result.fetchall()]    
+    all_ids = [row[0] for row in result.fetchall()]
     return random.choice(all_ids)
 
 
-def add_new_crag(name, latitude, longitude, description, manager, created_by): 
+def add_new_crag(name, latitude, longitude, description, manager, created_by):
+    """Inserts a new crag into the database"""
     try:
         sql = """
         INSERT INTO crags (crag_name, latitude, longitude, crag_description, manager, created_by)
         VALUES (:name, :latitude, :longitude, :description, :manager, :created_by)"""
         db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "manager":manager, "created_by":created_by})
         db.session.commit()
-    except: 
+    except Exception as e:
+        print(e)
         return False
     return True
 
 
-def search_crags(query): # search shows more relevant results first
+def search_crags(query):
+    """A search that shows more relevant results first"""
     q = query.lower()
     sql = """
     SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by
