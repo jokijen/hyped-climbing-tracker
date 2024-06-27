@@ -62,6 +62,7 @@
                 name="old_password" 
                 pattern="[a-zA-Z0-9._+\-]{8,30}$" 
                 title="Password must be at least 8 characters long and contain at least one number."
+                value="{{ old_password or ''}}"
                 required>
             <label for="password1">New password:</label>
             <input 
@@ -70,6 +71,7 @@
                 name="password1" 
                 pattern="[a-zA-Z0-9._+\-]{8,30}$" 
                 title="Password must be at least 8 characters long and contain at least one number."
+                value="{{ password1 or ''}}"
                 required>
             <label for="password2">New password again:</label>
             <input 
@@ -78,6 +80,7 @@
                 name="password2" 
                 pattern="[a-zA-Z0-9._+\-]{8,30}$" 
                 title="Password must be at least 8 characters long and contain at least one number."
+                value="{{ password2 or ''}}"
                 required>
             <input type="submit" class="save" value="Change password">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">

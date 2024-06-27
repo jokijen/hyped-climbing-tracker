@@ -522,7 +522,7 @@ def thesaurus():
 
 @app.route("/profile", methods=["GET", "POST"])
 def profile():
-    """Profile page with some info and password change form"""
+    """Profile page with user info (email, join date) and password change form"""
     if request.method == "GET":
         if not users.user_id():
             return redirect("/")
@@ -540,21 +540,34 @@ def profile():
         old_password = request.form["old_password"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
+        user_info = users.get_user_info(user_id)
+        is_admin = users.is_admin()
 
         if not users.is_valid_password(password1):
             flash(
                 "Password must be at least 8 characters long and contain at least one number",
                 "error"
             )
-            return redirect(request.url)
+            return render_template(
+                "profile.html",
+                error="Password must be at least 8 characters long and contain at least one number",
+                user_info=user_info, admin=is_admin, old_password=old_password, password1=password1,password2=password2
+            )
 
         if password1 != password2:
             flash("The passwords do not match", "error")
-            return redirect(request.url)
+            return render_template(
+                "profile.html",
+                error="The passwords do not match",
+                user_info=user_info, admin=is_admin, old_password=old_password, password1=password1,password2=password2
+            )
 
         if not users.validate_password(user_id, old_password):
             flash("Incorrect password", "error")
-            return redirect(request.url)
+            return render_template(
+                "profile.html",
+                error="Incorrect password",
+                user_info=user_info, admin=is_admin, old_password=old_password, password1=password1,password2=password2)
 
         if users.change_password(user_id, password1):
             flash("Password successfully changed", "success")
@@ -562,7 +575,6 @@ def profile():
 
         return render_template(
             "error.html",
-            message="The operation was unsuccessful. Please try a again."
+            message="Something went wrong with changing the password :( Please try a again."
         )
-    return redirect(request.url)
     
