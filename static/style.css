@@ -150,15 +150,25 @@ button.btn-add-to[type="submit"]:hover {
     background: rgb(75, 4, 91);
 }
 
+button.btn-log-sent[type="submit"], 
 button.btn-mark-sent[type="submit"], 
 form input.save[type="submit"]{
     background: rgb(2, 161, 26);
+}
+
+button.btn-log-sent[type="submit"]:hover,
+button.btn-mark-sent[type="submit"]:hover,
+form input.save[type="submit"]:hover {
+    background: rgb(1, 115, 18);
+}
+
+button.btn-mark-sent[type="submit"], 
+form input.save[type="submit"]{
     margin-top: 20px;
 }
 
 button.btn-mark-sent[type="submit"]:hover,
 form input.save[type="submit"]:hover {
-    background: rgb(1, 115, 18);
     margin-top: 20px;
 }
 

@@ -40,7 +40,7 @@
             <!-- If climb is sent, show "Edit send" and "Delete send", else show "Log as sent" button -->
             {% if not is_climbed %}
             <form action="/log-send/{{ climb_details.id }}" method="get">
-                <button type="submit" class="btn-mark-sent">Log as sent</button>
+                <button type="submit" class="btn-log-sent">Log as sent</button>
             </form>
             {% else %}
             <form class="form-edit" action="/edit-send/{{ climb_details.id }}" method="get">
