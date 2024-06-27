@@ -50,8 +50,8 @@
             Type: <b>{{ climb_details.climb_type }}</b><br>
             First ascent: <b>{{ climb_details.first_ascent }}</b><br>
             <br>
-            Ticked by <b>{{ tick_count }}</b> users<br>
-            Sent by <b>{{ send_count }}</b> users<br>
+            Ticked by <b>{{ tick_count }}</b> user(s)<br>
+            Sent by <b>{{ send_count }}</b> user(s)<br>
             Average rating (0&ndash;3): <b>{{ avg_rating }}</b><br>
             <br>
             Added to your ticklist: <b>{{ tick_date }}</b><br>
@@ -101,7 +101,7 @@
         <!-- Add a new comment -->
         <form class="form-comment" action="/climbs/{{ climb_details.id }}" method="post">
             <textarea id="content" name="content" maxlength="1000" placeholder="Comment on the climb" required></textarea>
-            <input type="submit" value="Post comment">
+            <input class="form-btn" type="submit" value="Post comment">
             <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
         </form>
         <hr> 

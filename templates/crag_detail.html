@@ -47,11 +47,14 @@
         <hr> 
         <p>
             Number of climbs: <b>{{ climb_count }}</b><br>
-            Marked favourite by <b>{{ fav_count}}</b> users<br>
+            Highest grade: <b>{{ max_min.max_grade }}</b><br>
+            Lowest grade: <b>{{ max_min.min_grade }}</b><br>
             <br>
             Latitude: <b>{{ crag_details.latitude }}</b><br>
             Longitude: <b>{{ crag_details.longitude }}</b><br>
             Managed by: <b>{{ crag_details.manager }}</b><br>
+            <br>
+            Marked favourite by <b>{{ fav_count}}</b> user(s)
         </p>
         <!-- If crag in favourites, show "Remove from favourites", else show "Add to favourites" button -->
         {% if is_favourite %}

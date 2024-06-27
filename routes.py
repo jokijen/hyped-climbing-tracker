@@ -179,10 +179,11 @@ def crag_detail(crag_id):
     crag_details = crags.get_crag(crag_id)
     climbs_at_crag = climbs.get_climbs_by_crag_id(crag_id) # all climbs at that crag
     climb_count = len(climbs_at_crag) # number of climbs at crag
-    fav_count = favourites.times_favourited(crag_id)
-    is_favourite = favourites.is_in_favourites(user_id, crag_id)
+    max_min = crags.max_min_grade_at_crag(crag_id)
+    fav_count = favourites.times_favourited(crag_id) # favourites by this many users
+    is_favourite = favourites.is_in_favourites(user_id, crag_id) # is favourite of current user
     is_admin = users.is_admin()
-    return render_template("crag_detail.html",crag_id=crag_id, crag_details=crag_details, climbs_at_crag=climbs_at_crag, climb_count=climb_count, fav_count=fav_count, is_favourite=is_favourite, admin=is_admin)
+    return render_template("crag_detail.html",crag_id=crag_id, crag_details=crag_details, climbs_at_crag=climbs_at_crag, climb_count=climb_count, max_min=max_min, fav_count=fav_count, is_favourite=is_favourite, admin=is_admin)
 
 
 @app.route("/add-crag", methods=["GET", "POST"])

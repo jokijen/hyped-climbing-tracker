@@ -43,6 +43,11 @@
             Email: <b>{{ user_info.email}}</b><br>
             Joined: <b>{{ user_info.creation_date }} at {{ user_info.creation_time}}</b>
         </p>
+        {% if admin %}
+        <p>
+            You are an administrator
+        </p>
+        {% endif %}
         <hr>
         <h3>Change your password</h3>
         {% with messages = get_flashed_messages(with_categories=true) %} 

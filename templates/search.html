@@ -39,7 +39,7 @@
     <div class="container">
         <form method="get" action="/search">
             <input type="text" name="query" placeholder="New search">
-            <button type="submit">Search</button>
+            <button class="form-btn" type="submit">Search</button>
         </form>
         <h1>Search results for &quot;{{ search_terms }}&quot;</h1> <!-- Search terms of the previous search -->
 
@@ -51,9 +51,11 @@
             <span>&#x2022;</span>
             {{ crag.crag_description }}
         </p>
-        Latitude: <b>{{ crag.latitude }}</b><br>
-        Longitude: <b>{{ crag.longitude }}</b><br>
-        Managed by: <b>{{ crag.manager }}</b><br>
+        <p>
+            Latitude: <b>{{ crag.latitude }}</b><br>
+            Longitude: <b>{{ crag.longitude }}</b><br>
+            Managed by: <b>{{ crag.manager }}</b><br>
+        </p>
         <form action="/crags/{{ crag.id }}" method="get">
             <button type="submit">Go to crag</button>
         </form>
@@ -68,9 +70,11 @@
             <span>&#x2022;</span>
             {{ climb.climb_description }}
         </p>
-        Crag: <b>{{ climb.crag_name }}</b><br>
-        Type: <b>{{ climb.climb_type }}</b><br>
-        First ascent: <b>{{ climb.first_ascent }}</b><br>
+        <p>
+            Crag: <b>{{ climb.crag_name }}</b><br>
+            Type: <b>{{ climb.climb_type }}</b><br>
+            First ascent: <b>{{ climb.first_ascent }}</b><br>
+        </p>
         <form action="/climbs/{{ climb.id }}" method="get">
             <button type="submit">Go to climb</button>
         </form>

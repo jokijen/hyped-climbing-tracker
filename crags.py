@@ -27,6 +27,18 @@ def get_crag(crag_id):
     return crag_info
 
 
+def max_min_grade_at_crag(crag_id):
+    """Returns the highest and lowest grades (for climbs) at the crag"""
+    sql = """
+    SELECT MAX(s.difficulty) AS max_grade, MIN (s.difficulty) AS min_grade
+    FROM crags c, climbs s
+    WHERE c.id = s.crag_id
+    AND c.id = :crag_id"""
+    result = db.session.execute(text(sql), {"crag_id":crag_id})
+    max_min = result.fetchone()
+    return max_min
+
+
 def get_random_crag():
     """Returns a valid crag id from the database so that a random crag can be retrieved"""
     sql = "SELECT id FROM crags"

@@ -39,7 +39,7 @@
     <div class="container">
         <h1>All climbs</h1> 
         <h2 class="hidden">All climbs</h2> <!-- Hidden heading to not skip a heading tag -->
-        <p>Here is a list of all climbs listed on Hyped - boulder, sport, trad, you name it!</p>
+        <p>Here is a list of all climbs listed on Hyped &ndash; boulder, sport, trad, you name it!</p>
         <hr>
         {% for climb in climbs_list %}
         <h3> {{ climb.climb_name }}, {{ climb.difficulty }} </h3>
@@ -47,9 +47,11 @@
             <span>&#x2022;</span>
             {{ climb.climb_description }}
         </p>
-        Crag: <b>{{ climb.crag_name }}</b><br>
+        <p>
+            Crag: <b>{{ climb.crag_name }}</b><br>
         Type: <b>{{ climb.climb_type }}</b><br>
         First ascent: <b>{{ climb.first_ascent }}</b><br>
+        </p>
         <form action="/climbs/{{ climb.id }}" method="get">
             <button type="submit">Go to climb</button>
         </form>

@@ -35,7 +35,6 @@ body {
     list-style-type: none;
 }
 
-
 .sidebar nav ul li a {
     color: snow;
     text-decoration: none;
@@ -76,7 +75,7 @@ h3 {
 }
 
 p {
-    margin-bottom: 10px;
+    margin-bottom: 20x;
 }
 
 form {
@@ -128,12 +127,12 @@ button.btn-go-to[type="submit"] {
     padding: 10px 20px;
     border-radius: 5px;
     align-self: flex-end;
-    margin-top: 10px;
+    margin-top: 0;
     cursor: pointer;
 }
 
-button.btn-go-to[type="submit"] {
-    margin-top: 5px;
+.form-btn[type="submit"] {
+    margin-top: 10px;
 }
 
 button[type="submit"]:hover,
@@ -154,11 +153,13 @@ button.btn-add-to[type="submit"]:hover {
 button.btn-mark-sent[type="submit"], 
 form input.save[type="submit"]{
     background: rgb(2, 161, 26);
+    margin-top: 20px;
 }
 
 button.btn-mark-sent[type="submit"]:hover,
 form input.save[type="submit"]:hover {
     background: rgb(1, 115, 18);
+    margin-top: 20px;
 }
 
 button.btn-edit[type="submit"] {

@@ -42,19 +42,17 @@
         <p>Here are all your logged sends from latest to oldest. You go crusher!</p>
         <hr>
         {% for climb in sends %}
-        <h3> {{ climb.climb_name }}, {{ climb.difficulty }}</h3>
+        <h3> {{ climb.climb_name }}, {{ climb.difficulty }} ({{ climb.crag_name }}) / {{ climb.climb_type }}</h3>
         <p>
             <span>&#x2022;</span>
             {{ climb.climb_description }}
         </p>
-        Send date: <b>{{ climb.send_date }}</b><br>
-        Send type: <b>{{ climb.send_type }}</b><br>
-        Rating: <b>{{ climb.rating }}</b><br>
-        Review: "{{ climb.review }}"<br>
-        <br>
-        Crag: <b>{{ climb.crag_name }}</b><br>
-        Type: <b>{{ climb.climb_type }}</b><br>
-        First ascent: <b>{{ climb.first_ascent }}</b><br>
+        <p>
+            Send date: <b>{{ climb.send_date }}</b><br>
+            Send type: <b>{{ climb.send_type }}</b><br>
+            Rating: <b>{{ climb.rating }}</b><br>
+            Review: "{{ climb.review }}"
+        </p>
         <form action="/climbs/{{ climb.id }}" method="get">
             <button type="submit">Go to climb</button>
         </form>

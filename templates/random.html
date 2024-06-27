@@ -50,9 +50,11 @@
             <span>&#x2022;</span>
             {{ crag_details.crag_description }}
         </p>
-        Latitude: <b>{{ crag_details.latitude }}</b><br>
-        Longitude: <b>{{ crag_details.longitude }}</b><br>
-        Managed by: <b>{{ crag_details.manager }}</b><br>
+        <p>
+            Latitude: <b>{{ crag_details.latitude }}</b><br>
+            Longitude: <b>{{ crag_details.longitude }}</b><br>
+            Managed by: <b>{{ crag_details.manager }}</b><br>
+        </p>
         <form action="/crags/{{ crag_details.id }}" method="get">
             <button type="submit">Go to crag</button>
         </form>
@@ -64,9 +66,11 @@
             <span>&#x2022;</span>
             {{ climb_details.climb_description }}
         </p>
-        Crag: <b>{{ climb_details.crag_name }}</b><br>
-        Type: <b>{{ climb_details.climb_type }}</b><br>
-        First ascent: <b>{{ climb_details.first_ascent }}</b><br>
+        <p>
+            Crag: <b>{{ climb_details.crag_name }}</b><br>
+            Type: <b>{{ climb_details.climb_type }}</b><br>
+            First ascent: <b>{{ climb_details.first_ascent }}</b><br>
+        </p>
         <form action="/climbs/{{ climb_details.id }}" method="get">
             <button type="submit">Go to climb</button>
         </form>

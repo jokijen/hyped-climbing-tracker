@@ -47,9 +47,11 @@
             <span>&#x2022;</span>
             {{ crag.crag_description }}
         </p>
-        Latitude: <b>{{ crag.latitude }}</b> <br>
-        Longitude: <b>{{ crag.longitude }}</b> <br>
-        Managed by: <b>{{ crag.manager }}</b> <br>
+        <p>
+            Latitude: <b>{{ crag.latitude }}</b> <br>
+            Longitude: <b>{{ crag.longitude }}</b> <br>
+            Managed by: <b>{{ crag.manager }}</b> <br>
+        </p>
         <form action="/crags/{{ crag.id }}" method="get">
             <button type="submit">Go to crag</button>
         </form>
