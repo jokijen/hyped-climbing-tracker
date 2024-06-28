@@ -74,7 +74,7 @@ def user_logout():
     session.clear()
 
 
-def user_id():
+def get_user_id():
     """Returns the user's id"""
     return session.get("user_id")
 
@@ -99,9 +99,13 @@ def is_admin():
 
 def is_suspended(username):
     """Returns boolean on if the user is suspended"""
-    sql = "SELECT suspended FROM users WHERE username = :username"
-    result = db.session.execute(text(sql), {"username":username})
-    user = result.fetchone()
-    if user[0]:
-        return True
-    return False
+    try:
+        sql = "SELECT suspended FROM users WHERE username = :username"
+        result = db.session.execute(text(sql), {"username":username})
+        user = result.fetchone()
+        if user[0]:
+            return True
+        return False
+    except Exception as e: # If user does not exist or other error
+        print(e)
+        return False
