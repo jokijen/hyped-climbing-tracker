@@ -39,7 +39,7 @@ import climbs, crags, users, comments, ticklist, favourites, sends
 def index():
     """landing/login page"""
     if request.method == "GET":
-        if users.user_id(): # user already logged in
+        if users.get_user_id(): # user already logged in
             return redirect("/home")
         return render_template("index.html")
 
@@ -61,7 +61,7 @@ def index():
 def register():
     """Page for registering new user"""
     if request.method == "GET":
-        if users.user_id():
+        if users.get_user_id():
             return redirect("/home")
         return render_template("register.html")
 
@@ -98,7 +98,7 @@ def logout():
 @app.route("/home")
 def home():
     """Home page"""
-    if not users.user_id(): # if user is not logged in, take to login page
+    if not users.get_user_id(): # if user is not logged in, take to login page
         return redirect("/")
 
     username = session.get("username")
@@ -110,10 +110,10 @@ def home():
 @app.route("/favourites")
 def favourites_page():
     """Favourites displays the crags marked favourite by user"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     favourite_crags = favourites.get_favourites(user_id)
     is_admin = users.is_admin()
     return render_template("favourites.html", favourite_crags=favourite_crags, admin=is_admin)
@@ -122,10 +122,10 @@ def favourites_page():
 @app.route("/ticklist")
 def ticklist_page():
     """Ticklist displays the climbs added there by user"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     tick_list = ticklist.get_ticklist(user_id)
     is_admin = users.is_admin()
     return render_template("ticklist.html", tick_list=tick_list, admin=is_admin)
@@ -134,10 +134,10 @@ def ticklist_page():
 @app.route("/logged-sends")
 def logged_sends_page():
     """Logged sends displays the climbs marked as sent by user"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     logged_sends = sends.get_sends_for_user(user_id)
     is_admin = users.is_admin()
 
@@ -147,7 +147,7 @@ def logged_sends_page():
 @app.route("/search", methods=["GET"])
 def search_page():
     """Search for crags and climbs"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
     query = request.args["query"]
@@ -161,7 +161,7 @@ def search_page():
 def crags_page():
     """A list of all the crags on the app"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
         all_crags = crags.get_all_crags()
@@ -172,10 +172,10 @@ def crags_page():
 @app.route("/crags/<int:crag_id>")
 def crag_detail(crag_id):
     """Crag page of an individual crag"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
-    user_id = users.user_id()
+    user_id = users.get_user_id()
     crag_details = crags.get_crag(crag_id)
     climbs_at_crag = climbs.get_climbs_by_crag_id(crag_id) # all climbs at that crag
     climb_count = len(climbs_at_crag) # number of climbs at crag
@@ -200,7 +200,7 @@ def crag_detail(crag_id):
 def add_crag():
     """Admin users can add crags to the app"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
         if not users.is_admin():
             return render_template(
@@ -220,7 +220,7 @@ def add_crag():
         longitude = request.form["longitude"]
         crag_description = request.form["crag_description"]
         manager = request.form["manager"]
-        created_by = users.user_id()
+        created_by = users.get_user_id()
 
         if crags.add_new_crag(crag_name, latitude, longitude, crag_description, manager, created_by):
             return redirect("/crags")
@@ -234,7 +234,7 @@ def add_crag():
 def climbs_page():
     """A list of all the climbs on the app"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
         all_climbs = climbs.get_all_climbs()
@@ -246,10 +246,10 @@ def climbs_page():
 def climb_detail(climb_id):
     """Climb page of an individual climb"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         is_admin = users.is_admin()
         climb_details = climbs.get_climb(climb_id)
         all_comments = comments.get_comments_for_climb_id(climb_id) # all comments of that climb
@@ -280,7 +280,7 @@ def climb_detail(climb_id):
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
-        user_id = users.user_id()
+        user_id = users.get_user_id()
 
         content = request.form["content"]
         if comments.add_comment(user_id=user_id, climb_id=climb_id, content=content):
@@ -295,7 +295,7 @@ def climb_detail(climb_id):
 def add_climb():
     """Admin users can add climbs to the app"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
         all_crags = crags.get_all_crags()
@@ -312,7 +312,7 @@ def add_climb():
         climb_description = request.form["climb_description"]
         crag_id = request.form["crag_id"]
         first_ascent = request.form["first_ascent"]
-        created_by = users.user_id()
+        created_by = users.get_user_id()
 
         if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, first_ascent, created_by):
             return redirect("/climbs")
@@ -330,7 +330,7 @@ def delete_comment(comment_id):
             abort(403)
 
         comment = comments.get_comment_for_comment_id(comment_id)
-        if comment and (comment.user_id == users.user_id() or users.is_admin()):
+        if comment and (comment.user_id == users.get_user_id() or users.is_admin()):
             # Checks that the user wrote the comment or is admin
             if comments.delete_comment_using_id(comment_id):
                 return redirect(url_for("climb_detail", climb_id=comment.climb_id))
@@ -347,7 +347,7 @@ def add_to_favourites(crag_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         if favourites.is_in_favourites(user_id, crag_id): # Flash message if the crag is already in favourites
             flash("The crag is already in favourites", "error")
             return redirect(url_for("crag_detail", crag_id=crag_id))
@@ -368,7 +368,7 @@ def remove_from_favourites(crag_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         is_favourite = favourites.is_in_favourites(user_id, crag_id)
 
         if is_favourite:
@@ -387,7 +387,7 @@ def add_to_ticklist(climb_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
 
         if sends.is_sent(user_id, climb_id): # Flash message if the user already sent the climb
             flash("You already sent the climb, so you cannot add it to your tick-list", "error")
@@ -410,7 +410,7 @@ def remove_from_ticklist(climb_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         on_ticklist = ticklist.is_on_ticklist(user_id, climb_id)
         is_sent = sends.is_sent(user_id, climb_id)
 
@@ -427,10 +427,10 @@ def remove_from_ticklist(climb_id):
 def log_send(climb_id):
     """User can log a send so mark a climb as sent"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         if sends.is_sent(user_id, climb_id):
             flash("You already sent this climb", "error")
             return redirect(url_for("climb_detail", climb_id=climb_id))
@@ -443,7 +443,7 @@ def log_send(climb_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         send_date = request.form["send_date"]
         send_type = request.form["send_type"]
         review = request.form["review"]
@@ -463,10 +463,10 @@ def log_send(climb_id):
 def edit_send(climb_id):
     """User can edit their logged send"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         climb_details = climbs.get_climb(climb_id)
         send_details = sends.get_send_details(user_id, climb_id)
         options = ["onsight", "flash", "send"]
@@ -484,7 +484,7 @@ def edit_send(climb_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         send_date = request.form["send_date"]
         send_type = request.form["send_type"]
         review = request.form["review"]
@@ -507,7 +507,7 @@ def delete_from_sends(climb_id):
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         is_sent = sends.is_sent(user_id, climb_id)
 
         if is_sent:
@@ -522,7 +522,7 @@ def delete_from_sends(climb_id):
 @app.route("/random")
 def random():
     """Shows the user a random crag and climb"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
     random_crag_id = crags.get_random_crag()
@@ -541,7 +541,7 @@ def random():
 @app.route("/thesaurus")
 def thesaurus():
     """Thesaurus of common climbing vocabulary"""
-    if not users.user_id():
+    if not users.get_user_id():
         return redirect("/")
 
     is_admin = users.is_admin()
@@ -552,10 +552,10 @@ def thesaurus():
 def profile():
     """Profile page with user info (email, join date) and password change form"""
     if request.method == "GET":
-        if not users.user_id():
+        if not users.get_user_id():
             return redirect("/")
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         user_info = users.get_user_info(user_id)
         is_admin = users.is_admin()
         return render_template("profile.html", user_info=user_info, admin=is_admin)
@@ -564,7 +564,7 @@ def profile():
         if session["csrf_token"] != request.form["csrf_token"]:
             abort(403)
 
-        user_id = users.user_id()
+        user_id = users.get_user_id()
         old_password = request.form["old_password"]
         password1 = request.form["password1"]
         password2 = request.form["password2"]
