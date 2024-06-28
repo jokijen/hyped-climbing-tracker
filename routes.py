@@ -183,7 +183,17 @@ def crag_detail(crag_id):
     fav_count = favourites.times_favourited(crag_id) # favourites by this many users
     is_favourite = favourites.is_in_favourites(user_id, crag_id) # is favourite of current user
     is_admin = users.is_admin()
-    return render_template("crag_detail.html",crag_id=crag_id, crag_details=crag_details, climbs_at_crag=climbs_at_crag, climb_count=climb_count, max_min=max_min, fav_count=fav_count, is_favourite=is_favourite, admin=is_admin)
+    return render_template(
+        "crag_detail.html",
+        crag_id=crag_id,
+        crag_details=crag_details,
+        climbs_at_crag=climbs_at_crag,
+        climb_count=climb_count,
+        max_min=max_min,
+        fav_count=fav_count,
+        is_favourite=is_favourite,
+        admin=is_admin
+    )
 
 
 @app.route("/add-crag", methods=["GET", "POST"])
@@ -193,7 +203,10 @@ def add_crag():
         if not users.user_id():
             return redirect("/")
         if not users.is_admin():
-            return render_template("error.html", message="Only admins can add crags. Get in touch with us if this is something that interests you.")
+            return render_template(
+                "error.html", 
+                essage="Only admins can add crags. Get in touch with us if this interests you."
+            )
 
         is_admin = users.is_admin()
         return render_template("add_crag.html", admin=is_admin)
@@ -248,7 +261,21 @@ def climb_detail(climb_id):
         avg_rating = sends.average_rating(climb_id)
         on_ticklist = ticklist.is_on_ticklist(user_id, climb_id)
         is_climbed = sends.is_sent(user_id, climb_id)
-        return render_template("climb_detail.html", current_user=user_id, admin=is_admin, climb_details=climb_details, comments=all_comments, sends=logged_sends, send_count=send_count, tick_count=tick_count, tick_date=tick_date, send_date=send_date, avg_rating=avg_rating, on_ticklist=on_ticklist, is_climbed=is_climbed)
+        return render_template(
+            "climb_detail.html",
+            current_user=user_id,
+            admin=is_admin,
+            climb_details=climb_details,
+            comments=all_comments,
+            sends=logged_sends,
+            send_count=send_count,
+            tick_count=tick_count,
+            tick_date=tick_date,
+            send_date=send_date,
+            avg_rating=avg_rating,
+            on_ticklist=on_ticklist,
+            is_climbed=is_climbed
+        )
 
     if request.method == "POST":
         if session["csrf_token"] != request.form["csrf_token"]:
@@ -304,7 +331,7 @@ def delete_comment(comment_id):
 
         comment = comments.get_comment_for_comment_id(comment_id)
         if comment and (comment.user_id == users.user_id() or users.is_admin()):
-            # Checks if the user is the same that wrote the comment or an admin, in which case they can delete the message
+            # Checks that the user wrote the comment or is admin
             if comments.delete_comment_using_id(comment_id):
                 return redirect(url_for("climb_detail", climb_id=comment.climb_id))
             return render_template(
