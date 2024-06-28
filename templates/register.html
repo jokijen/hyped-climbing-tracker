@@ -38,7 +38,7 @@
                 type="email" 
                 id="email" 
                 name="email" 
-                pattern="[a-zA-Z0-9._+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,6}$" 
+                pattern="[a-zA-Z0-9._\+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,6}$" 
                 title="Email must be of a valid format e.g. address@domain.com"
                 required>
             <label for="password1">Password:</label>
@@ -46,7 +46,7 @@
                 type="password" 
                 id="password1" 
                 name="password1" 
-                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,30}$"
                 title="Password must be at least 8 characters long and contain at least one number."
                 required>
             <label for="password2">Password again:</label>
@@ -54,7 +54,7 @@
                 type="password" 
                 id="password2" 
                 name="password2" 
-                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,30}$" 
                 title="Password must be at least 8 characters long and contain at least one number."
                 required>
             <input type="submit" value="Create account">
