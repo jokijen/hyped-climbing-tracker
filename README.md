@@ -54,6 +54,12 @@ This project has been created for learning purposes and the course "Tietokannat 
 - Personal to users.
 - Favourite crags consist of crags added to favourites by the user.
 
+### Preview screenshots
+
+![Screenshot of Home](static/screenshots/Screenshot_Hyped_home.png)
+
+![Screenshot of Add climb](static/screenshots/Screenshot_Hyped_add-climb.png)
+
 
 ## Current state of the application
 
