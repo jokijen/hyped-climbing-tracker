@@ -5,7 +5,9 @@
 {% block content %}
     <div class="container">
         <h1>Profile</h1>
+        <hr>
         <h2>{{ user_info.username }}</h2>
+        <hr>
         <p>
             Email: <b>{{ user_info.email}}</b><br>
             Joined: <b>{{ user_info.creation_date }} at {{ user_info.creation_time}}</b>
@@ -16,7 +18,8 @@
         </p>
         {% endif %}
         <hr>
-        <h3>Change your password</h3>
+        <h2>Change your password</h2>
+        <hr>
         {% with messages = get_flashed_messages(with_categories=true) %} 
         {% if messages %} 
         <ul> 
@@ -33,7 +36,7 @@
                 id="old_password" 
                 name="old_password" 
                 pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
-                title="Password must be 8-40 characters long and contain at least one number. No special characters."
+                title="Password must be 8-40 characters long and contain at least one number."
                 value="{{ old_password or ''}}"
                 required>
             <label for="password1">New password:</label>
@@ -42,7 +45,7 @@
                 id="password1" 
                 name="password1" 
                 pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
-                title="Password must be 8-40 characters long and contain at least one number. No special characters."
+                title="Password must be 8-40 characters long and contain at least one number."
                 value="{{ password1 or ''}}"
                 required>
             <label for="password2">New password again:</label>
@@ -51,7 +54,7 @@
                 id="password2" 
                 name="password2" 
                 pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
-                title="Password must be 8-40 characters long and contain at least one number. No special characters."
+                title="Password must be 8-40 characters long and contain at least one number."
                 value="{{ password2 or ''}}"
                 required>
             <input type="submit" class="save" value="Change password">

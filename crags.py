@@ -8,10 +8,11 @@ from db import db
 
 
 def get_all_crags():
-    """Returns all crags and their info in alphabetical order of climb"""
+    """Returns all crags and their info in alphabetical order"""
     sql = """
     SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by
-    FROM crags ORDER BY crag_name"""
+    FROM crags
+    ORDER BY crag_name"""
     result = db.session.execute(text(sql))
     all_crags = result.fetchall()
     return all_crags
@@ -21,7 +22,8 @@ def get_crag(crag_id):
     """Returns information of a crag by the crag's id"""
     sql = """
     SELECT id, crag_name, latitude, longitude, crag_description, manager, created_by
-    FROM crags WHERE id = :crag_id"""
+    FROM crags
+    WHERE id = :crag_id"""
     result = db.session.execute(text(sql), {"crag_id":crag_id})
     crag_info = result.fetchone()
     return crag_info
@@ -68,7 +70,6 @@ def add_new_crag(name, latitude, longitude, description, manager, created_by):
         print(e)
         return None
     return new_crag_id
-
 
 
 def search_crags(query):
