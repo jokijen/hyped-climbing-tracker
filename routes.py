@@ -529,6 +529,53 @@ def delete_from_sends(climb_id):
     )
 
 
+@app.route("/user-management", methods=["GET", "POST"])
+def suspend_or_free_user():
+    """Admin users can suspend or free users"""
+    if request.method == "GET":
+        if not users.get_user_id():
+            return redirect("/")
+
+        is_admin = users.is_admin()
+        if not is_admin:
+            return render_template(
+                "error.html", 
+                message="Only admins have access. Get in touch with us if this interests you."
+            )
+
+        free_non_admins = users.all_free_non_admins()
+        suspended_non_admins = users.all_suspended_non_admins()
+
+        return render_template(
+            "user_management.html",
+            free_non_admins=free_non_admins,
+            suspended_non_admins=suspended_non_admins,
+            admin=is_admin
+        )
+
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+
+        if "to_suspend_id" in request.form:
+            to_suspend_id = request.form["to_suspend_id"]
+            if users.suspend_user_by_id(to_suspend_id):
+                flash("User suspended successfully", "success")
+                return redirect(request.url)
+
+        if "to_free_id" in request.form:
+            to_free_id = request.form["to_free_id"]
+            if users.free_user_by_id(to_free_id):
+                flash("User suspension cancelled", "success")
+                return redirect(request.url)
+            
+        return render_template(
+            "error.html",
+            message="Something went wrong with managing users :( Please try a again."
+        )
+    abort(405)
+
+
 @app.route("/random", methods=["GET"])
 def random():
     """Shows the user a random crag and climb"""

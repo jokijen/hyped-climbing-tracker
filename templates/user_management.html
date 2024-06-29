@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}User management | Hyped - Log your sends and discover new projects{% endblock %}
+    
+{% block content %}
+    <div class="container">
+        <h1>User management</h1>
+        <p>If a user engages in bad conduct, you can suspend them here.<br>Similarly if the matter is resolved, you can free them of suspension.</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %} 
+        {% if messages %} 
+        <ul> 
+            {% for category, message in messages %} 
+            <li class="{{ category }}">{{ message }}</li> 
+            {% endfor %} 
+        </ul> 
+        {% endif %} 
+        {% endwith %}
+        <hr>
+        <h2>Suspend user</h2>
+        <hr>
+        <form action="/user-management" method="post">
+            <label for="to_suspend_id">User:</label>
+            <select id="to_suspend_id" name="to_suspend_id" required>
+                <option value="" disabled selected>Select user</option>
+                {% for user in free_non_admins %}
+                <option value="{{ user.id}}">{{ user.username}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" class="delete" value="Suspend user">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+        <hr>
+        <h2>Free user</h2>
+        <hr>
+        <form action="/user-management" method="post">
+            <label for="to_free_id">User:</label>
+            <select id="to_free_id" name="to_free_id" required>
+                <option value="" disabled selected>Select user</option>
+                {% for user in suspended_non_admins %}
+                <option value="{{ user.id}}">{{ user.username}}</option>
+                {% endfor %}
+            </select>
+            <input type="submit" class="save" value="Free user">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    </div>
+{% endblock %}

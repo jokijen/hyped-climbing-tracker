@@ -131,8 +131,11 @@ button.btn-go-to[type="submit"] {
     cursor: pointer;
 }
 
-.form-btn[type="submit"] {
-    margin-top: 10px;
+.form-btn[type="submit"], 
+form input.delete[type="submit"],
+button.btn-mark-sent[type="submit"], 
+form input.save[type="submit"] {
+    margin-top: 15px;
 }
 
 button[type="submit"]:hover,
@@ -160,16 +163,6 @@ button.btn-log-sent[type="submit"]:hover,
 button.btn-mark-sent[type="submit"]:hover,
 form input.save[type="submit"]:hover {
     background: rgb(1, 115, 18);
-}
-
-button.btn-mark-sent[type="submit"], 
-form input.save[type="submit"]{
-    margin-top: 20px;
-}
-
-button.btn-mark-sent[type="submit"]:hover,
-form input.save[type="submit"]:hover {
-    margin-top: 20px;
 }
 
 button.btn-edit[type="submit"] {

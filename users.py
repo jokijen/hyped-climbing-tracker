@@ -109,3 +109,53 @@ def is_suspended(username):
     except Exception as e: # If user does not exist or other error
         print(e)
         return False
+
+
+def all_free_non_admins():
+    """Returns all non-suspendednon-admin users' id and username"""
+    sql = """
+    SELECT id, username
+    FROM users
+    WHERE administrator = FALSE
+    AND suspended = FALSE
+    ORDER BY username"""
+    result = db.session.execute(text(sql))
+    free_non_admins = result.fetchall()
+    return free_non_admins
+
+
+def all_suspended_non_admins():
+    """Returns all suspended non-admin users' id and username"""
+    sql = """
+    SELECT id, username
+    FROM users
+    WHERE administrator = FALSE
+    AND suspended = TRUE
+    ORDER BY username"""
+    result = db.session.execute(text(sql))
+    suspended_non_admins = result.fetchall()
+    return suspended_non_admins
+
+
+def suspend_user_by_id(user_id):
+    """Suspends a user"""
+    try:
+        sql = "UPDATE users SET suspended = TRUE WHERE id = :user_id"
+        db.session.execute(text(sql), {"user_id":user_id})
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def free_user_by_id(user_id):
+    """Frees a user from suspension"""
+    try:
+        sql = "UPDATE users SET suspended = FALSE WHERE id = :user_id"
+        db.session.execute(text(sql), {"user_id":user_id})
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
