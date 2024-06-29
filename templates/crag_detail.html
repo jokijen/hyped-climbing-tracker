@@ -9,6 +9,11 @@
             <span>&#x2022;</span>
             {{ crag_details.crag_description }}
         </p>
+        {% if admin %}
+        <form class="form-edit" action="/edit-crag/{{ crag_details.id }}" method="get">
+        <button type="submit" class="btn-edit">Edit crag</button>
+        </form>
+        {% endif %}
         <hr> 
         <h2>Crag information</h2> 
         <hr> 

@@ -75,6 +75,31 @@ def add_new_climb(name, difficulty, climb_type, description, crag_id, first_asce
     return new_climb_id
 
 
+def edit_climb(climb_id, climb_name, difficulty, climb_type, climb_description, first_ascent):
+    try:
+        sql = """
+        UPDATE climbs
+        SET climb_name = :climb_name,
+            difficulty = :difficulty,
+            climb_type = :climb_type,
+            climb_description = :climb_description,
+            first_ascent = :first_ascent
+        WHERE id = :climb_id"""
+        db.session.execute(text(sql), {
+            "climb_name":climb_name,
+            "difficulty":difficulty,
+            "climb_type":climb_type,
+            "climb_description":climb_description,
+            "first_ascent":first_ascent,
+            "climb_id":climb_id
+        })
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return False
+    return True
+
+
 def search_climbs(query):
     """A search that shows more relevant results first"""
     q_lower = query.lower()

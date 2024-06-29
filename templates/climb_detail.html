@@ -9,9 +9,14 @@
             <span>&#x2022;</span>
             {{ climb_details.climb_description }}
         </p>
-        <hr> 
-        <h2>Climb information</h2> 
-        <hr> 
+        {% if admin %}
+        <form class="form-edit" action="/edit-climb/{{ climb_details.id }}" method="get">
+        <button type="submit" class="btn-edit">Edit climb</button>
+        </form>
+        {% endif %}
+    <hr> 
+    <h2>Climb information</h2> 
+    <hr> 
         <p>
             Crag: <b><a href="/crags/{{ climb_details.crag_id}}" class="understated-link">{{ climb_details.crag_name }}</a></b><br>
             Type: <b>{{ climb_details.climb_type }}</b><br>

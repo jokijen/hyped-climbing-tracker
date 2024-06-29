@@ -511,6 +511,88 @@ def edit_send(climb_id):
     abort(405)
 
 
+@app.route("/edit-climb/<int:climb_id>", methods=["GET", "POST"])
+def edit_climb_page(climb_id):
+    """Admins can edit climbs"""
+    if request.method == "GET":
+        if not users.get_user_id():
+            return redirect("/")
+
+        is_admin = users.is_admin()
+        if not is_admin:
+            return render_template(
+                "error.html", 
+                message="Only admins can edit climbs. Get in touch with us if this interests you."
+            )
+
+        climb_details = climbs.get_climb(climb_id)
+        options = ["boulder", "DWS", "sport", "trad"]
+        return render_template(
+            "edit_climb.html",
+            climb_details=climb_details,
+            options=options,
+            admin=is_admin
+        )
+
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+
+        climb_name = request.form["climb_name"]
+        difficulty = request.form["difficulty"]
+        climb_type = request.form["climb_type"]
+        climb_description = request.form["climb_description"]
+        first_ascent = request.form["first_ascent"]
+
+        if climbs.edit_climb(climb_id, climb_name, difficulty, climb_type, climb_description, first_ascent):
+            return redirect(url_for("climb_detail", climb_id=climb_id))
+        return render_template(
+            "error.html",
+            message="Something went wrong with editing the climb :( Please try a again."
+        )
+    abort(405)
+
+
+@app.route("/edit-crag/<int:crag_id>", methods=["GET", "POST"])
+def edit_crag_page(crag_id):
+    """Admins can edit crags"""
+    if request.method == "GET":
+        if not users.get_user_id():
+            return redirect("/")
+
+        is_admin = users.is_admin()
+        if not is_admin:
+            return render_template(
+                "error.html", 
+                message="Only admins can edit crags. Get in touch with us if this interests you."
+            )
+
+        crag_details = crags.get_crag(crag_id)
+        return render_template(
+            "edit_crag.html",
+            crag_details=crag_details,
+            admin=is_admin
+        )
+
+    if request.method == "POST":
+        if session["csrf_token"] != request.form["csrf_token"]:
+            abort(403)
+
+        crag_name = request.form["crag_name"]
+        latitude = request.form["latitude"]
+        longitude = request.form["longitude"]
+        crag_description = request.form["crag_description"]
+        manager = request.form["manager"]
+
+        if crags.edit_crag(crag_id, crag_name, latitude, longitude, crag_description, manager):
+            return redirect(url_for("crag_detail", crag_id=crag_id))
+        return render_template(
+            "error.html",
+            message="Something went wrong with editing the crag :( Please try a again."
+        )
+    abort(405)
+
+
 @app.route("/delete-send/<int:climb_id>", methods=["POST"])
 def delete_from_sends(climb_id):
     """Users can delete their logged send"""

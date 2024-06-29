@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+
+{% block title %}Edit climb | Hyped - Log your sends and discover new projects{% endblock %}
+    
+{% block content %}
+    <div class="container">
+        <h1>Edit: {{ climb_details.climb_name }}, {{ climb_details.difficulty }} ({{ climb_details.crag_name }})</h1>
+        <p>You can edit most climb details, but not the crag. Make sure all the fields are filled in.</p>
+        <form action="/edit-climb/{{ climb_details.id }}" method="post">
+            <label for="crag_id">Crag:</label>
+            <select id="crag_id" name="crag_id" disabled required>
+                <option value="{{ climb_details.crag_id }}">{{ climb_details.crag_name }}</option>
+            </select>
+            <label for="climb_name">Climb name:</label>
+            <input type="text" id="climb_name" name="climb_name" value="{{ climb_details.climb_name }}">
+            <label for="difficulty">Difficulty:</label>
+            <input 
+            type="text" 
+            id="difficulty" 
+            name="difficulty" 
+            pattern="^[3-9]([a-cA-C]?[\+\-]?)?$"
+            title="Use the Fontainebleau grading from 3 up e.g. 7A+ for boulder and 7a+ for sport/trad"
+            placeholder="e.g. 3, 6a, 7B, 8a+" 
+            value="{{ climb_details.difficulty }}"
+            required>
+            <label for="climb_type">Type:</label>
+            <select id="climb_type" name="climb_type" required>
+                <option value="{{ climb_details.climb_type }}" selected>{{ climb_details.climb_type }}</option>
+                {% for option in options %}
+                    {% if option != climb_details.climb_type %}
+                    <option value="{{ option }}">{{ option }}</option>
+                    {% endif %}
+                {% endfor %}
+            </select>
+            <label for="climb_description">Climb description:</label>
+            <textarea 
+            id="climb_description"
+            name="climb_description"
+            maxlength="1000" placeholder="e.g. Overhanging. Sit-start from the jug..."
+            required>{{ climb_details.climb_description }}</textarea>
+            <label for="first_ascent">First ascent:</label>
+            <input type="text" id="first_ascent" name="first_ascent" maxlength="50" placeholder="Name" value="{{ climb_details.first_ascent }}" required>
+            <input type="submit" class="save" value="Save changes">
+            <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        </form>
+    </div>
+{% endblock %}

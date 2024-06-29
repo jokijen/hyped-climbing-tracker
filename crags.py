@@ -72,6 +72,31 @@ def add_new_crag(name, latitude, longitude, description, manager, created_by):
     return new_crag_id
 
 
+def edit_crag(crag_id, crag_name, latitude, longitude, crag_description, manager):
+    try:
+        sql = """
+        UPDATE crags
+        SET crag_name = :crag_name,
+            latitude = :latitude,
+            longitude = :longitude,
+            crag_description = :crag_description,
+            manager = :manager
+        WHERE id = :crag_id"""
+        db.session.execute(text(sql), {
+            "crag_name":crag_name,
+            "latitude":latitude,
+            "longitude":longitude,
+            "crag_description":crag_description,
+            "manager":manager,
+            "crag_id":crag_id
+        })
+        db.session.commit()
+    except Exception as e:
+        print(e)
+        return False
+    return True
+
+
 def search_crags(query):
     """A search that shows more relevant results first"""
     q = query.lower()

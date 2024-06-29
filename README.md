@@ -28,7 +28,7 @@ This project has been created for learning purposes and the course "Tietokannat 
 - Users can add a crag to favourites, or remove it, and view their favourites as a list.
 - Users can add climbs that they want to climb in the future to a tick-list, as well as remove them.
 - Users can log (incl. review) routes they have climbed. They can also add public comments under the climbs.
-- Administrators can also add crags and climbs. 
+- Administrators can also add and edit crags and climbs. 
 - Administrators can remove user comments on routes.
 - Administrators can suspend and free non-admin users
 
