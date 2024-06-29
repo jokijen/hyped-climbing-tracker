@@ -37,15 +37,14 @@ CREATE TABLE sends (
     review VARCHAR(1000),
     rating INTEGER DEFAULT 0 CHECK (rating >= 0 AND rating <= 3),
     deleted BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE (user_id, climb_id)
-
 );
 CREATE TABLE favourite_crags (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) NOT NULL,
     crag_id INTEGER REFERENCES crags(id) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
     deleted BOOLEAN DEFAULT FALSE,
     UNIQUE (user_id, crag_id)
 );
@@ -54,7 +53,7 @@ CREATE TABLE ticklist (
     user_id INTEGER REFERENCES users(id) NOT NULL,
     climb_id INTEGER REFERENCES climbs(id) NOT NULL,
     deleted BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT NOW()
+    created_at TIMESTAMP DEFAULT NOW(),
     UNIQUE (user_id, climb_id)
 );
 CREATE TABLE comments (
