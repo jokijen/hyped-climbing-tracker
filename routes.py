@@ -56,6 +56,8 @@ def index():
             return redirect("/home")
         return render_template("error.html", message="Incorrect username or password")
 
+    abort(405)
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -87,15 +89,17 @@ def register():
             message="Registration was unsuccessful. Possible reasons: "
             "username or email already in use. Please try a again.")
 
+    abort(405)
 
-@app.route("/logout")
+
+@app.route("/logout", methods=["GET"])
 def logout():
     """Logout page shown after the user has loged out"""
     users.user_logout() # clears the session
     return render_template("logout.html")
 
 
-@app.route("/home")
+@app.route("/home", methods=["GET"])
 def home():
     """Home page"""
     if not users.get_user_id(): # if user is not logged in, take to login page
@@ -107,7 +111,7 @@ def home():
     return render_template("home.html", username=username, admin=is_admin, latest_sends=latest_sends)
 
 
-@app.route("/favourites")
+@app.route("/favourites", methods=["GET"])
 def favourites_page():
     """Favourites displays the crags marked favourite by user"""
     if not users.get_user_id():
@@ -119,7 +123,7 @@ def favourites_page():
     return render_template("favourites.html", favourite_crags=favourite_crags, admin=is_admin)
 
 
-@app.route("/ticklist")
+@app.route("/ticklist", methods=["GET"])
 def ticklist_page():
     """Ticklist displays the climbs added there by user"""
     if not users.get_user_id():
@@ -131,7 +135,7 @@ def ticklist_page():
     return render_template("ticklist.html", tick_list=tick_list, admin=is_admin)
 
 
-@app.route("/logged-sends")
+@app.route("/logged-sends", methods=["GET"])
 def logged_sends_page():
     """Logged sends displays the climbs marked as sent by user"""
     if not users.get_user_id():
@@ -157,19 +161,18 @@ def search_page():
     return render_template("search.html", search_terms=query, crags_list=find_crags, climbs_list=find_climbs, admin=is_admin)
 
 
-@app.route("/crags", methods=["GET", "POST"])
+@app.route("/crags", methods=["GET"])
 def crags_page():
     """A list of all the crags on the app"""
-    if request.method == "GET":
-        if not users.get_user_id():
-            return redirect("/")
+    if not users.get_user_id():
+        return redirect("/")
 
-        all_crags = crags.get_all_crags()
-        is_admin = users.is_admin()
-        return render_template("crags.html", crags_list=all_crags, admin=is_admin)
+    all_crags = crags.get_all_crags()
+    is_admin = users.is_admin()
+    return render_template("crags.html", crags_list=all_crags, admin=is_admin)
 
 
-@app.route("/crags/<int:crag_id>")
+@app.route("/crags/<int:crag_id>", methods=["GET"])
 def crag_detail(crag_id):
     """Crag page of an individual crag"""
     if not users.get_user_id():
@@ -202,13 +205,13 @@ def add_crag():
     if request.method == "GET":
         if not users.get_user_id():
             return redirect("/")
-        if not users.is_admin():
-            return render_template(
-                "error.html", 
-                essage="Only admins can add crags. Get in touch with us if this interests you."
-            )
 
         is_admin = users.is_admin()
+        if not is_admin:
+            return render_template(
+                "error.html",
+                message="Only admins can add crags. Get in touch with us if this interests you."
+            )
         return render_template("add_crag.html", admin=is_admin)
 
     if request.method == "POST":
@@ -222,24 +225,26 @@ def add_crag():
         manager = request.form["manager"]
         created_by = users.get_user_id()
 
-        if crags.add_new_crag(crag_name, latitude, longitude, crag_description, manager, created_by):
-            return redirect("/crags")
+        new_crag_id = crags.add_new_crag(crag_name, latitude, longitude, crag_description, manager, created_by)
+
+        if new_crag_id:
+            return redirect(url_for("crag_detail", crag_id=new_crag_id))
         return render_template(
             "error.html",
             message="Something went wrong with adding the crag :( Please try a again."
         )
+    abort(405)
 
 
-@app.route("/climbs", methods=["GET", "POST"])
+@app.route("/climbs", methods=["GET"])
 def climbs_page():
     """A list of all the climbs on the app"""
-    if request.method == "GET":
-        if not users.get_user_id():
-            return redirect("/")
+    if not users.get_user_id():
+        return redirect("/")
 
-        all_climbs = climbs.get_all_climbs()
-        is_admin = users.is_admin()
-        return render_template("climbs.html", climbs_list=all_climbs, admin=is_admin)
+    all_climbs = climbs.get_all_climbs()
+    is_admin = users.is_admin()
+    return render_template("climbs.html", climbs_list=all_climbs, admin=is_admin)
 
 
 @app.route("/climbs/<int:climb_id>", methods=["GET", "POST"])
@@ -289,6 +294,7 @@ def climb_detail(climb_id):
             "error.html",
             message="Something went wrong with adding the comment :( Please try a again."
         )
+    abort(405)
 
 
 @app.route("/add-climb", methods=["GET", "POST"])
@@ -298,8 +304,14 @@ def add_climb():
         if not users.get_user_id():
             return redirect("/")
 
-        all_crags = crags.get_all_crags()
         is_admin = users.is_admin()
+        if not is_admin:
+            return render_template(
+                "error.html", 
+                message="Only admins can add climbs. Get in touch with us if this interests you."
+            )
+
+        all_crags = crags.get_all_crags()
         return render_template("add_climb.html", all_crags=all_crags, admin=is_admin)
 
     if request.method == "POST":
@@ -314,113 +326,110 @@ def add_climb():
         first_ascent = request.form["first_ascent"]
         created_by = users.get_user_id()
 
-        if climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, first_ascent, created_by):
-            return redirect("/climbs")
+        new_climb_id = climbs.add_new_climb(climb_name, difficulty, climb_type, climb_description, crag_id, first_ascent, created_by)
+
+        if new_climb_id:
+            return redirect(url_for("climb_detail", climb_id=new_climb_id))
         return render_template(
             "error.html",
             message="Something went wrong with adding the climb :( Please try a again."
         )
+    abort(405)
 
 
 @app.route("/delete-comment/<int:comment_id>", methods=["POST"])
 def delete_comment(comment_id):
     """Users can delete their comments, admins all comments"""
-    if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
-        comment = comments.get_comment_for_comment_id(comment_id)
-        if comment and (comment.user_id == users.get_user_id() or users.is_admin()):
-            # Checks that the user wrote the comment or is admin
-            if comments.delete_comment_using_id(comment_id):
-                return redirect(url_for("climb_detail", climb_id=comment.climb_id))
-            return render_template(
-                "error.html",
-                message="Something went wrong with deleting the comment :( Please try a again."
-            )
+    comment = comments.get_comment_for_comment_id(comment_id)
+    if comment and (comment.user_id == users.get_user_id() or users.is_admin()):
+        # Checks that the user wrote the comment or is admin
+        if comments.delete_comment_using_id(comment_id):
+            return redirect(url_for("climb_detail", climb_id=comment.climb_id))
+    return render_template(
+        "error.html",
+        message="Something went wrong with deleting the comment :( Please try a again."
+    )
 
 
 @app.route("/add-to-favourites/<int:crag_id>", methods=["POST"])
 def add_to_favourites(crag_id):
     """Add crag to favourites of the user"""
-    if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
-        user_id = users.get_user_id()
-        if favourites.is_in_favourites(user_id, crag_id): # Flash message if the crag is already in favourites
-            flash("The crag is already in favourites", "error")
-            return redirect(url_for("crag_detail", crag_id=crag_id))
+    user_id = users.get_user_id()
+    if favourites.is_in_favourites(user_id, crag_id): # Flash message if the crag is already in favourites
+        flash("The crag is already in favourites", "error")
+        return redirect(url_for("crag_detail", crag_id=crag_id))
 
-        else:
-            if favourites.add_crag_to_favourites(user_id, crag_id): # Add crag to favourite crags
-                return redirect(url_for("crag_detail", crag_id=crag_id))
-            return render_template(
-                "error.html",
-                message="Something went wrong with adding the crag to favourites :( Please try a again."
-            )
+    if favourites.add_crag_to_favourites(user_id, crag_id): # Add crag to favourite crags
+        return redirect(url_for("crag_detail", crag_id=crag_id))
+    return render_template(
+        "error.html",
+        message="Something went wrong with adding the crag to favourites :( Please try a again."
+    )
 
 
 @app.route("/remove-from-favourites/<int:crag_id>", methods=["POST"])
 def remove_from_favourites(crag_id):
     """Remove crag from favourites of the user"""
-    if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
-        user_id = users.get_user_id()
-        is_favourite = favourites.is_in_favourites(user_id, crag_id)
+    user_id = users.get_user_id()
+    is_favourite = favourites.is_in_favourites(user_id, crag_id)
 
-        if is_favourite:
-            if favourites.delete_from_favourites(user_id, crag_id):
-                return redirect(url_for("crag_detail", crag_id=crag_id))
-            return render_template(
-                "error.html",
-                message="Something went wrong with deleting the crag from favourites :( Please try a again."
-            )
+    if is_favourite:
+        if favourites.delete_from_favourites(user_id, crag_id):
+            return redirect(url_for("crag_detail", crag_id=crag_id))
+    return render_template(
+        "error.html",
+        message="Something went wrong with deleting the crag from favourites :( Please try a again."
+    )
 
 
 @app.route("/add-to-ticklist/<int:climb_id>", methods=["POST"])
 def add_to_ticklist(climb_id):
     """Add climb to ticklist of the user"""
-    if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
-        user_id = users.get_user_id()
+    user_id = users.get_user_id()
 
-        if sends.is_sent(user_id, climb_id): # Flash message if the user already sent the climb
-            flash("You already sent the climb, so you cannot add it to your tick-list", "error")
-            return redirect(url_for("climb_detail", climb_id=climb_id))
-        if ticklist.is_on_ticklist(user_id, climb_id): # Flash message if the climb is already on tick-list
-            flash("The climb is already on your tick-list", "error")
-            return redirect(url_for("climb_detail", climb_id=climb_id))
-        if ticklist.add_climb_to_ticklist(user_id, climb_id): # Add crag to favourite crags
-            return redirect(url_for("climb_detail", climb_id=climb_id))
-        return render_template(
-            "error.html",
-            message="Something went wrong with adding the climb to your tick-list :( Please try a again."
-        )
+    if sends.is_sent(user_id, climb_id): # Flash message if the user already sent the climb
+        flash("You already sent the climb, so you cannot add it to your tick-list", "error")
+        return redirect(url_for("climb_detail", climb_id=climb_id))
+    if ticklist.is_on_ticklist(user_id, climb_id): # Flash message if the climb is already on tick-list
+        flash("The climb is already on your tick-list", "error")
+        return redirect(url_for("climb_detail", climb_id=climb_id))
+    if ticklist.add_climb_to_ticklist(user_id, climb_id): # Add crag to favourite crags
+        return redirect(url_for("climb_detail", climb_id=climb_id))
+    return render_template(
+        "error.html",
+        message="Something went wrong with adding the climb to your tick-list :( Please try a again."
+    )
 
 
 @app.route("/remove-from-ticklist/<int:climb_id>", methods=["POST"])
 def remove_from_ticklist(climb_id):
     """Remove climb from the ticklist of the user"""
-    if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
-        user_id = users.get_user_id()
-        on_ticklist = ticklist.is_on_ticklist(user_id, climb_id)
-        is_sent = sends.is_sent(user_id, climb_id)
+    user_id = users.get_user_id()
+    on_ticklist = ticklist.is_on_ticklist(user_id, climb_id)
+    is_sent = sends.is_sent(user_id, climb_id)
 
-        if on_ticklist and not is_sent:
-            if ticklist.delete_from_ticklist(user_id, climb_id):
-                return redirect(url_for("climb_detail", climb_id=climb_id))
-        return render_template(
-            "error.html",
-            message="Something went wrong with removing the climb from your tick-list :( Please try a again."
-        )
+    if on_ticklist and not is_sent:
+        if ticklist.delete_from_ticklist(user_id, climb_id):
+            return redirect(url_for("climb_detail", climb_id=climb_id))
+    return render_template(
+        "error.html",
+        message="Something went wrong with removing the climb from your tick-list :( Please try a again."
+    )
 
 
 @app.route("/log-send/<int:climb_id>", methods=["GET", "POST"])
@@ -457,6 +466,7 @@ def log_send(climb_id):
             "error.html",
             message="Something went wrong with logging the send :( Please try a again."
         )
+    abort(405)
 
 
 @app.route("/edit-send/<int:climb_id>", methods=["GET", "POST"])
@@ -498,28 +508,28 @@ def edit_send(climb_id):
             "error.html",
             message="Something went wrong with logging the send :( Please try a again."
         )
+    abort(405)
 
 
 @app.route("/delete-send/<int:climb_id>", methods=["POST"])
 def delete_from_sends(climb_id):
     """Users can delete their logged send"""
-    if request.method == "POST":
-        if session["csrf_token"] != request.form["csrf_token"]:
-            abort(403)
+    if session["csrf_token"] != request.form["csrf_token"]:
+        abort(403)
 
-        user_id = users.get_user_id()
-        is_sent = sends.is_sent(user_id, climb_id)
+    user_id = users.get_user_id()
+    is_sent = sends.is_sent(user_id, climb_id)
 
-        if is_sent:
-            if sends.delete_send(user_id, climb_id):
-                return redirect(url_for("climb_detail", climb_id=climb_id))
-        return render_template(
-            "error.html",
-            message="Something went wrong with deleting the send :( Please try a again."
-        )
+    if is_sent:
+        if sends.delete_send(user_id, climb_id):
+            return redirect(url_for("climb_detail", climb_id=climb_id))
+    return render_template(
+        "error.html",
+        message="Something went wrong with deleting the send :( Please try a again."
+    )
 
 
-@app.route("/random")
+@app.route("/random", methods=["GET"])
 def random():
     """Shows the user a random crag and climb"""
     if not users.get_user_id():
@@ -538,7 +548,7 @@ def random():
     )
 
 
-@app.route("/thesaurus")
+@app.route("/thesaurus", methods=["GET"])
 def thesaurus():
     """Thesaurus of common climbing vocabulary"""
     if not users.get_user_id():
@@ -605,4 +615,5 @@ def profile():
             "error.html",
             message="Something went wrong with changing the password :( Please try a again."
         )
+    abort(405)
     

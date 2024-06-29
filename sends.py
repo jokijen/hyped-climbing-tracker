@@ -106,7 +106,14 @@ def add_send(user_id, climb_id, send_date, send_type, review, rating):
             send_type = :send_type, 
             review = :review, 
             rating = :rating"""
-        db.session.execute(text(sql), {"user_id":user_id, "climb_id":climb_id, "send_date":send_date, "send_type":send_type, "review":review, "rating":rating})
+        db.session.execute(text(sql), {
+            "user_id":user_id,
+            "climb_id":climb_id,
+            "send_date":send_date,
+            "send_type":send_type,
+            "review":review,
+            "rating":rating
+        })
         db.session.commit()
     except Exception as e:
         print(e)

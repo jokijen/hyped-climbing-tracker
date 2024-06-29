@@ -48,17 +48,27 @@ def get_random_crag():
 
 
 def add_new_crag(name, latitude, longitude, description, manager, created_by):
-    """Inserts a new crag into the database"""
+    """Inserts a new crag into the database and returns its id"""
     try:
         sql = """
         INSERT INTO crags (crag_name, latitude, longitude, crag_description, manager, created_by)
-        VALUES (:name, :latitude, :longitude, :description, :manager, :created_by)"""
-        db.session.execute(text(sql), {"name":name, "latitude":latitude, "longitude":longitude, "description":description, "manager":manager, "created_by":created_by})
+        VALUES (:name, :latitude, :longitude, :description, :manager, :created_by)
+        RETURNING id"""
+        result = db.session.execute(text(sql), {
+            "name":name,
+            "latitude":latitude,
+            "longitude":longitude,
+            "description":description,
+            "manager":manager,
+            "created_by":created_by
+        })
+        new_crag_id = result.fetchone()[0]
         db.session.commit()
     except Exception as e:
         print(e)
-        return False
-    return True
+        return None
+    return new_crag_id
+
 
 
 def search_crags(query):

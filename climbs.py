@@ -52,17 +52,27 @@ def get_random_climb():
 
 
 def add_new_climb(name, difficulty, climb_type, description, crag_id, first_ascent, created_by):
-    """Inserts a new climb into the database"""
+    """Inserts a new climb into the database and returns its id"""
     try:
         sql = """
         INSERT INTO climbs (climb_name, difficulty, climb_type, climb_description, crag_id, first_ascent, created_by)
-        VALUES (:name, :difficulty, :climb_type, :description, :crag_id, :first_ascent, :created_by)"""
-        db.session.execute(text(sql), {"name":name, "difficulty":difficulty, "climb_type":climb_type, "description":description, "crag_id":crag_id, "first_ascent":first_ascent, "created_by":created_by})
+        VALUES (:name, :difficulty, :climb_type, :description, :crag_id, :first_ascent, :created_by)
+        RETURNING id"""
+        result = db.session.execute(text(sql), {
+            "name":name,
+            "difficulty":difficulty,
+            "climb_type":climb_type,
+            "description":description,
+            "crag_id":crag_id,
+            "first_ascent":first_ascent,
+            "created_by":created_by
+        })
+        new_climb_id = result.fetchone()[0]
         db.session.commit()
     except Exception as e:
         print(e)
-        return False
-    return True
+        return None
+    return new_climb_id
 
 
 def search_climbs(query):
