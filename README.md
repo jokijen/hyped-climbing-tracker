@@ -30,6 +30,7 @@ This project has been created for learning purposes and the course "Tietokannat 
 - Users can log (incl. review) routes they have climbed. They can also add public comments under the climbs.
 - Administrators can also add crags and climbs. 
 - Administrators can remove user comments on routes.
+- Administrators can suspend and free non-admin users
 
 ### Crags
 
@@ -56,8 +57,10 @@ This project has been created for learning purposes and the course "Tietokannat 
 
 ### Preview screenshots
 
+Home
 ![Screenshot of Home](static/screenshots/Screenshot_Hyped_home.png)
 
+Add climb
 ![Screenshot of Add climb](static/screenshots/Screenshot_Hyped_add-climb.png)
 
 
