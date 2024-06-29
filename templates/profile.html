@@ -32,8 +32,8 @@
                 type="password" 
                 id="old_password" 
                 name="old_password" 
-                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
-                title="Password must be at least 8 characters long and contain at least one number."
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
+                title="Password must be 8-40 characters long and contain at least one number. No special characters."
                 value="{{ old_password or ''}}"
                 required>
             <label for="password1">New password:</label>
@@ -41,8 +41,8 @@
                 type="password" 
                 id="password1" 
                 name="password1" 
-                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
-                title="Password must be at least 8 characters long and contain at least one number."
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
+                title="Password must be 8-40 characters long and contain at least one number. No special characters."
                 value="{{ password1 or ''}}"
                 required>
             <label for="password2">New password again:</label>
@@ -50,8 +50,8 @@
                 type="password" 
                 id="password2" 
                 name="password2" 
-                pattern="[a-zA-Z0-9._+\-]{8,30}$" 
-                title="Password must be at least 8 characters long and contain at least one number."
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
+                title="Password must be 8-40 characters long and contain at least one number. No special characters."
                 value="{{ password2 or ''}}"
                 required>
             <input type="submit" class="save" value="Change password">

@@ -46,16 +46,16 @@
                 type="password" 
                 id="password1" 
                 name="password1" 
-                pattern="^(?=.*\d)[a-zA-Z\d]{8,30}$"
-                title="Password must be at least 8 characters long and contain at least one number."
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
+                title="Password must be 8-40 characters long and contain at least one number. No special characters."
                 required>
             <label for="password2">Password again:</label>
             <input 
                 type="password" 
                 id="password2" 
                 name="password2" 
-                pattern="^(?=.*\d)[a-zA-Z\d]{8,30}$" 
-                title="Password must be at least 8 characters long and contain at least one number."
+                pattern="^(?=.*\d)[a-zA-Z\d]{8,40}$"
+                title="Password must be 8-40 characters long and contain at least one number. No special characters."
                 required>
             <input type="submit" value="Create account">
         </form>
